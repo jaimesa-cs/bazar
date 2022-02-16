@@ -5,10 +5,12 @@ import BannerWithProducts from "@containers/banner-with-products";
 import BrandGridBlock from "@containers/brand-grid-block";
 import CategoryBlock from "@containers/category-block";
 import Container from "@components/ui/container";
+import DefaultError from "@components/contentstack/default-error";
 import Divider from "@components/ui/divider";
 import DownloadApps from "@components/common/download-apps";
 import ExclusiveBlock from "@containers/exclusive-block";
 import { GetStaticProps } from "next";
+import HandleLoadingOrError from "@components/contentstack/handle-loading-and-error";
 import Instagram from "@components/common/instagram";
 import Layout from "@components/layout/layout";
 import NewArrivalsProductFeed from "@components/product/feeds/new-arrivals-product-feed";
@@ -20,15 +22,14 @@ import Support from "@components/common/support";
 import { homeThreeBanner as banner } from "@framework/static/banner";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useHomeQuery } from "@framework/content/get-content";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const { data: page, isLoading, error } = useHomeQuery();
+  const { locale } = useRouter();
+  const { data: page, isLoading, error } = useHomeQuery(locale);
 
-  return isLoading ? (
-    <>Loading...</>
-  ) : (
-    <>
-      {error && <h1>ERROR:{JSON.stringify(error)}</h1>}
+  return (
+    <HandleLoadingOrError isLoading={isLoading} error={error}>
       {page && page.banner && <BannerBlock data={page.banner} />}
       <Container>
         <ProductsFlashSaleBlock date={"2023-03-01T01:02:03"} />
@@ -59,7 +60,7 @@ export default function Home() {
         <Subscription className="bg-opacity-0 px-5 sm:px-16 xl:px-0 py-12 md:py-14 xl:py-16" />
       </Container>
       <Divider className="mb-0" />
-    </>
+    </HandleLoadingOrError>
   );
 }
 

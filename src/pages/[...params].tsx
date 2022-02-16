@@ -1,5 +1,4 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useCompositionQuery, useDefaultCompositionQuery } from "@framework/content/get-content";
 
 import Container from "@components/ui/container";
 import { Element } from "react-scroll";
@@ -9,6 +8,7 @@ import PageHeader from "@components/ui/page-header";
 import RenderModularBlocks from "@components/contentstack/render-modular-blocks";
 import { StaticComposition } from "@framework/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useCompositionQuery } from "@framework/content/get-content";
 import { useRouter } from "next/router";
 
 const staticPageIncludes: string[] = ["header.banner", "dynamic_blocks.mail_list_subscription.email_subscription"];
@@ -23,6 +23,7 @@ export default function CatchAll({ static_page, path }: StaticPageProps) {
   // console.log(router.asPath);
   const { data: page, error } = useCompositionQuery<StaticComposition>(
     router.asPath,
+    router.locale,
     "static_composition",
     staticPageIncludes,
     jsonRteFields

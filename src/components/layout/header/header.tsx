@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 
+import HandleLoadingOrError from "@components/contentstack/handle-loading-and-error";
 import HeaderMenu from "@components/layout/header/header-menu";
 import LanguageSwitcher from "@components/ui/language-switcher";
 import Logo from "@components/ui/logo";
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
   const { data: navigation, isLoading, error } = useNavigationQuery();
   const { openSidebar, setDrawerView, openSearch, openModal, setModalView, isAuthorized } = useUI();
   const { t } = useTranslation("common");
+
   const siteHeaderRef = useRef() as DivElementRef;
   addActiveScroll(siteHeaderRef);
 
@@ -33,11 +35,8 @@ const Header: React.FC = () => {
     return openSidebar();
   }
 
-  return isLoading ? (
-    <>Loading...</>
-  ) : (
-    <>
-      {error && <h1>ERROR:{JSON.stringify(error)}</h1>}
+  return (
+    <HandleLoadingOrError error={error} isLoading={isLoading}>
       <header id="siteHeader" ref={siteHeaderRef} className="w-full h-16 sm:h-20 lg:h-24 relative z-20">
         <div className="innerSticky text-gray-700 body-font fixed bg-white w-full h-16 sm:h-20 lg:h-24 z-20 ps-4 md:ps-0 lg:ps-6 pe-4 lg:pe-6 transition duration-200 ease-in-out">
           <div className="flex items-center justify-center mx-auto max-w-[1920px] h-full w-full">
@@ -86,7 +85,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </header>
-    </>
+    </HandleLoadingOrError>
   );
 };
 

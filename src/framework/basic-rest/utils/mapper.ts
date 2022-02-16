@@ -227,14 +227,14 @@ const getWidgets = (input: any): IWidget[] => {
             title: "",
           };
           //link
-          if (l.link) {
+          if (l.link && l.link.title && l.link.title.trim() !== "") {
             wi.path = l.link.href;
             wi.title = l.link.title;
           } else if (l.category && l.category.length > 0) {
             //category
             const c: any = l.category[0];
             if (c.link) {
-              wi.path = c.link.href;
+              wi.path = `search?q=${c.url.replace("/", "")}`;
               wi.title = c.link.title;
             }
           }

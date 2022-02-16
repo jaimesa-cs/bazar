@@ -172,6 +172,7 @@ export const getEntriesByUrl = <T extends any>({
 // };
 export const fetchComposition = <T extends Composition>(
   url: string,
+  locale: string | undefined = "en-us",
   type: string,
   includes?: string[],
   jsonRteFields?: string[]
@@ -184,6 +185,9 @@ export const fetchComposition = <T extends Composition>(
     }
 
     query.includeOwner().toJSON();
+    query.language(locale.toLowerCase() || "en-us");
+    query.includeFallback();
+    // console.log("QUERY", query);
     const data = query.where("url", url).find();
     data
       .then((result) => {
