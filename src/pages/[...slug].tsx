@@ -20,16 +20,7 @@ interface StaticPageProps {
   path?: string;
 }
 export default function CatchAll({ path, page }: StaticPageProps) {
-  // console.log(router.asPath);
-  // const { data: page, error } = useCompositionQuery<StaticComposition>(
-  //   router.asPath,
-  //   router.locale,
-  //   "static_composition",
-  //   staticPageIncludes,
-  //   jsonRteFields
-  // );
-  console.log("STATIC_PAGE", page);
-
+  // console.log("STATIC_PAGE", page);
   return page ? (
     <>
       {page.header && (

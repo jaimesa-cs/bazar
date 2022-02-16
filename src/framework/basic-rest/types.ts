@@ -163,7 +163,7 @@ export interface LanguageItem {
   id: string;
   name: string;
   value: string;
-  icon: ReactNode;
+  icon: JSX.Element;
 }
 export interface Navigation extends Composition {
   menu: NavigationItem[];
@@ -210,7 +210,7 @@ export interface Home extends Composition {
 export interface IWidgetItem {
   path?: string;
   title: string;
-  icon?: any;
+  icon?: ReactNode;
 }
 export interface IWidget {
   widgetTitle: string;

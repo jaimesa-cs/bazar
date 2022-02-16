@@ -16,6 +16,7 @@ import {
   Paragraph,
   StaticComposition,
 } from "@framework/types";
+import { IoLogoFacebook, IoLogoInstagram, IoLogoTwitter, IoLogoYoutube } from "react-icons/io5";
 
 const NEW_HEADER: PageHeader = {
   title: "",
@@ -240,7 +241,23 @@ const getWidgets = (input: any): IWidget[] => {
           }
           //icon
           if (l.icon) {
-            wi.icon = l.icon;
+            switch (l.icon.toLocaleLowerCase()) {
+              case "facebook":
+                wi.icon = <IoLogoFacebook />;
+                break;
+              case "twitter":
+                wi.icon = <IoLogoTwitter />;
+                break;
+              case "instagram":
+                wi.icon = <IoLogoInstagram />;
+                break;
+              case "youtube":
+                wi.icon = <IoLogoYoutube />;
+                break;
+              default:
+                wi.icon = <></>;
+                break;
+            }
           }
           widget.lists.push(wi);
         });
