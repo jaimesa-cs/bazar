@@ -4,6 +4,10 @@ import {
   Composition,
   FaqQuestion,
   Home,
+  IFooter,
+  IPayment,
+  IWidget,
+  IWidgetItem,
   Navigation,
   NavigationColumn,
   NavigationColumnItem,
@@ -207,6 +211,70 @@ const getParagraphs = (input: any): Paragraph[] => {
   }
   return [];
 };
+
+const getWidgets = (input: any): IWidget[] => {
+  if (input) {
+    const widgets: IWidget[] = [];
+    input.map((w: any) => {
+      const widget: IWidget = {
+        widgetTitle: w.list_title,
+        lists: [],
+      };
+      if (w.links && w.links.length > 0) {
+        w.links.map((l: any) => {
+          let wi: IWidgetItem = {
+            path: "",
+            title: "",
+          };
+          //link
+          if (l.link) {
+            wi.path = l.link.href;
+            wi.title = l.link.title;
+          } else if (l.category && l.category.length > 0) {
+            //category
+            const c: any = l.category[0];
+            if (c.link) {
+              wi.path = c.link.href;
+              wi.title = c.link.title;
+            }
+          }
+          //icon
+          if (l.icon) {
+            wi.icon = l.icon;
+          }
+          widget.lists.push(wi);
+        });
+      }
+      widgets.push(widget);
+    });
+    return widgets;
+  }
+  return [];
+};
+
+const getPayments = (input: any): IPayment[] => {
+  if (input) {
+    const payments: IPayment[] = [];
+    input.map((p: any) => {
+      const payment: IPayment = {
+        name: "",
+        image: "",
+      };
+
+      if (p.link) {
+        payment.path = p.link.href;
+        payment.name = p.link.title;
+      }
+      if (p.image) {
+        payment.image = p.image.url;
+      }
+      payments.push(payment);
+    });
+    return payments;
+  }
+  return [];
+};
+
 const getPageHeader = (input: any): PageHeader => {
   if (input) {
     // console.log("PAGE HEADER", input);
@@ -298,6 +366,24 @@ const getComposition = (input: any, type: string = "composition"): Composition =
         home.slider = toBannerList(input.sliding_banner.banners);
       }
       return home;
+
+    case "footer":
+      const footer: IFooter = {
+        title: input.title,
+        url: input.url,
+        type: type,
+        copyright: input.copyright,
+        widgets: [],
+        payment: [],
+      };
+      if (input.links && input.links.length > 0) {
+        footer.widgets.push(...getWidgets(input.links));
+      }
+      if (input.payment_methods && input.payment_methods.links && input.payment_methods.links.length > 0) {
+        footer.payment.push(...getPayments(input.payment_methods.links));
+      }
+
+      return footer;
     case "navigation":
       const menu: NavigationItem[] = [];
       if (input.links) {

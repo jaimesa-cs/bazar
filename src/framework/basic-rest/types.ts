@@ -207,6 +207,28 @@ export interface Home extends Composition {
   slider?: Banner[];
 }
 
+export interface IWidgetItem {
+  path?: string;
+  title: string;
+  icon?: any;
+}
+export interface IWidget {
+  widgetTitle: string;
+  lists: IWidgetItem[];
+}
+
+export interface IPayment {
+  path?: string;
+  name: string;
+  image: string;
+}
+
+export interface IFooter extends Composition {
+  copyright: string;
+  widgets: IWidget[];
+  payment: IPayment[];
+}
+
 export interface Composition {
   title: string;
   url: string;
