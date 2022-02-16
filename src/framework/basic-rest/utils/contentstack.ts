@@ -166,10 +166,7 @@ export const getEntriesByUrl = <T extends any>({
   });
 };
 
-//New Code
-// export const getCompositionByUrl = (url: string): Promise<any> => {
-//   return getComposition(url, ["content.banner.entry", "content.banner_slider.entries"], []);
-// };
+//Bazar Specific Code
 export const fetchComposition = <T extends Composition>(
   url: string,
   locale: string | undefined = "en-us",
@@ -177,7 +174,7 @@ export const fetchComposition = <T extends Composition>(
   includes?: string[],
   jsonRteFields?: string[]
 ): Promise<T> => {
-  // console.log("SDK");
+  console.log("SDK", url);
   return new Promise<T>((resolve, reject) => {
     const query = stack.ContentType(type).Query();
     if (includes) {
@@ -206,6 +203,33 @@ export const fetchComposition = <T extends Composition>(
       .catch((error) => {
         console.log("Error", error);
         reject(error);
+      });
+  });
+};
+
+export const getCompositionPaths = (locale: string | undefined = "en-us", type: string): Promise<any> => {
+  // console.log("SDK");
+  return new Promise<any>((resolve) => {
+    const query = stack.ContentType(type).Query();
+    query.includeOwner().toJSON();
+    query.language(locale.toLowerCase() || "en-us");
+    query.includeFallback();
+    // console.log("QUERY", query);
+    const data = query.only("BASE", "url").find();
+    data
+      .then((result) => {
+        // console.log("fetchComposition", result[0][0]);
+        resolve({
+          locale: locale,
+          paths: result[0].map((entry: any) => {
+            return entry.url;
+          }),
+        });
+      })
+      .catch(() => {
+        // console.log("Error", error);
+        // reject(error);
+        resolve([]);
       });
   });
 };
