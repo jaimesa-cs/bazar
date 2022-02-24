@@ -4,6 +4,7 @@ import {
   Composition,
   FaqQuestion,
   Home,
+  IErrorPage,
   IFooter,
   IPayment,
   IWidget,
@@ -318,6 +319,15 @@ const getPageHeader = (input: any): PageHeader => {
 const getComposition = (input: any, type: string = "composition"): Composition => {
   // console.log("COMPOSITION", input);
   switch (type) {
+    case "error_pages":
+      const errorPage: IErrorPage = {
+        title: input.title,
+        url: input.url,
+        type: input.type,
+        error: input.error_message,
+        errorNumber: input.error_number,
+      };
+      return errorPage;
     case "static_composition":
       const page: StaticComposition = {
         title: input.title,

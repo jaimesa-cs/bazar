@@ -53,6 +53,7 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
   if (locale !== defaultLocale) {
     path = `/${locale}${path}`;
   }
+
   // We remove the locale from the url, in constenstack we don't use the locale in the url
   if (locales?.some((l) => path.startsWith(`/${l}/`))) {
     path = path.replace(`/${locale}`, "");
@@ -95,7 +96,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
     // console.log("PATHS", paths);
     return {
       paths: paths,
-      fallback: false,
+      fallback: true,
     };
   });
 };

@@ -235,6 +235,11 @@ export interface Composition {
   type: string;
 }
 
+export interface IErrorPage extends Composition {
+  error: string;
+  errorNumber: string;
+}
+
 export type Image = {
   url: string;
   width?: number;

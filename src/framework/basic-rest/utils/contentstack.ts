@@ -174,7 +174,6 @@ export const fetchComposition = <T extends Composition>(
   includes?: string[],
   jsonRteFields?: string[]
 ): Promise<T> => {
-  console.log("SDK", url);
   return new Promise<T>((resolve, reject) => {
     const query = stack.ContentType(type).Query();
     if (includes) {
