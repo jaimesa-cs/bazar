@@ -4,6 +4,7 @@ import {
   Composition,
   FaqQuestion,
   Home,
+  IErrorPage,
   IFooter,
   IPayment,
   IWidget,
@@ -16,6 +17,7 @@ import {
   Paragraph,
   StaticComposition,
 } from "@framework/types";
+import { IoLogoFacebook, IoLogoInstagram, IoLogoTwitter, IoLogoYoutube } from "react-icons/io5";
 
 const NEW_HEADER: PageHeader = {
   title: "",
@@ -240,7 +242,23 @@ const getWidgets = (input: any): IWidget[] => {
           }
           //icon
           if (l.icon) {
-            wi.icon = l.icon;
+            switch (l.icon.toLocaleLowerCase()) {
+              case "facebook":
+                wi.icon = <IoLogoFacebook />;
+                break;
+              case "twitter":
+                wi.icon = <IoLogoTwitter />;
+                break;
+              case "instagram":
+                wi.icon = <IoLogoInstagram />;
+                break;
+              case "youtube":
+                wi.icon = <IoLogoYoutube />;
+                break;
+              default:
+                wi.icon = <></>;
+                break;
+            }
           }
           widget.lists.push(wi);
         });
@@ -301,6 +319,15 @@ const getPageHeader = (input: any): PageHeader => {
 const getComposition = (input: any, type: string = "composition"): Composition => {
   // console.log("COMPOSITION", input);
   switch (type) {
+    case "error_pages":
+      const errorPage: IErrorPage = {
+        title: input.title,
+        url: input.url,
+        type: input.type,
+        error: input.error_message,
+        errorNumber: input.error_number,
+      };
+      return errorPage;
     case "static_composition":
       const page: StaticComposition = {
         title: input.title,
