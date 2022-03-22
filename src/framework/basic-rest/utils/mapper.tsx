@@ -316,9 +316,9 @@ const getPageHeader = (input: any): PageHeader => {
   }
   return NEW_HEADER;
 };
-const getComposition = (input: any, type: string = "composition"): Composition | null => {
+const getComposition = (input: any, type: string = "composition"): Composition | undefined => {
   // console.log("COMPOSITION", input);
-  if (input === undefined) return null;
+  if (input === undefined) return input;
   try {
     switch (type) {
       case "error_pages":
@@ -457,19 +457,19 @@ const getComposition = (input: any, type: string = "composition"): Composition |
     }
   } catch (e) {
     console.log("ERROR", e);
-    return null;
+    return undefined;
   }
   throw `Mapping for type '${type}' not implemented.`;
 };
 
 export const mapper = () => {
   return {
-    toComposition: <T extends Composition>(input: any, type?: string): T | null => {
+    toComposition: <T extends Composition>(input: any, type?: string): T | undefined => {
       const c = getComposition(input, type);
-      if (c !== null) {
+      if (c !== undefined) {
         return c as T;
       }
-      return null;
+      return undefined;
     },
   };
 };

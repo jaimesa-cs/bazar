@@ -33,7 +33,7 @@ export const useDefaultCompositionQuery = <T extends Composition>(
   jsonRteFields?: string[]
 ) => {
   //SDK
-  return useQuery<T | null, Error>([url, includes, jsonRteFields], () =>
+  return useQuery<T | undefined, Error>([url, includes, jsonRteFields], () =>
     fetchComposition<T>(url, locale.toLowerCase(), "composition", includes, jsonRteFields)
   );
   //Raw
@@ -48,7 +48,7 @@ export const useCompositionQuery = <T extends Composition>(
   jsonRteFields?: string[]
 ) => {
   //SDK
-  return useQuery<T | null, Error>([url, locale, includes, jsonRteFields], () =>
+  return useQuery<T | undefined, Error>([url, locale, includes, jsonRteFields], () =>
     fetchComposition<T>(url, locale, type, includes, jsonRteFields)
   );
   //Raw
@@ -56,11 +56,11 @@ export const useCompositionQuery = <T extends Composition>(
 };
 
 export const useHomeQuery = (locale: string | undefined = "en-us") => {
-  return useQuery<Home | null, Error>(["/", locale], () => fetchComposition<Home>("/", locale, "composition", []));
+  return useQuery<Home | undefined, Error>(["/", locale], () => fetchComposition<Home>("/", locale, "composition", []));
 };
 
 export const useNavigationQuery = (key: string = "/navigation", locale: string | undefined = "en-us") => {
-  return useQuery<Navigation | null, Error>([key, locale], () =>
+  return useQuery<Navigation | undefined, Error>([key, locale], () =>
     fetchComposition<Navigation>("/navigation", locale, "navigation", [
       "links.category",
       "links.category.categories",

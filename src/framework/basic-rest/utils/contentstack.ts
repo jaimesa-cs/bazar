@@ -174,8 +174,8 @@ export const fetchComposition = <T extends Composition>(
   type: string,
   includes?: string[],
   jsonRteFields?: string[]
-): Promise<T | null> => {
-  return new Promise<T | null>((resolve, reject) => {
+): Promise<T | undefined> => {
+  return new Promise<T | undefined>((resolve, reject) => {
     const query = stack.ContentType(type).Query();
     if (includes) {
       query.includeReference(includes);
