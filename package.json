@@ -6,7 +6,7 @@
     "clean": "rimraf \"{.next,dist,build,out,node_modules}\"",
     "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production next start"
+    "start": "next start"
   },
   "dependencies": {
     "@contentstack/utils": "^1.1.1",
