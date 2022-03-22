@@ -19,7 +19,7 @@ interface StaticPageProps {
   path?: string;
 }
 export default function CatchAll({ path, page }: StaticPageProps) {
-  // console.log("STATIC_PAGE", page);
+  console.log("STATIC_PAGE", page);
   return page ? (
     <>
       {page.header && (
