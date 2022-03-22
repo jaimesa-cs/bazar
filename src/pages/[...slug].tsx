@@ -9,8 +9,6 @@ import PageHeader from "@components/ui/page-header";
 import RenderModularBlocks from "@components/contentstack/render-modular-blocks";
 import { StaticComposition } from "@framework/types";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { useCompositionQuery } from "@framework/content/get-content";
-import { useRouter } from "next/router";
 
 const staticPageIncludes: string[] = ["header.banner", "dynamic_blocks.mail_list_subscription.email_subscription"];
 const jsonRteFields: string[] = ["dynamic_blocks.paragraphs_with_links.paragraphs.paragraph"];

@@ -14,7 +14,7 @@ export default function LanguageSwitcher() {
   const { asPath, locale } = router;
   const currentSelectedItem = locale ? options.find((o) => o.value === locale)! : options[2];
   const [selectedItem, setSelectedItem] = useState(currentSelectedItem);
-  console.log("LOCALE", locale);
+  // console.log("LOCALE", locale);
   function handleItemClick(values: any) {
     setSelectedItem(values);
     router.push(asPath, undefined, {

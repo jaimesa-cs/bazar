@@ -29,7 +29,7 @@ const ShopSidebar: React.FC<ShopSidebarProps> = ({ data }) => {
     ? `${process.env.NEXT_PUBLIC_SITE_URL}${ROUTES.SHOPS}/${slug}`
     : `https://${process.env.NEXT_PUBLIC_VERCEL_URL}${ROUTES.SHOPS}/${slug}`;
   const [follow, setFollow] = useState(Boolean(false));
-
+  console.log(shareUrl);
   const followHandel = () => {
     return setFollow(!follow);
   };

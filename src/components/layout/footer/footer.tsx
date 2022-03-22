@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
     <HandleLoadingOrError isLoading={isLoading} error={error}>
       <footer className="border-b-4 border-heading mt-9 md:mt-11 lg:mt-16 3xl:mt-20 pt-2.5 lg:pt-0 2xl:pt-2">
         {footer && footer.widgets && <Widgets widgets={footer.widgets} />}
-        {footer && footer.payment && <Copyright payment={footer.payment} />}
+        {footer && footer.payment && <Copyright payment={footer.payment} copyright={footer.copyright} />}
       </footer>
     </HandleLoadingOrError>
   );

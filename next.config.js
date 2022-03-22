@@ -6,6 +6,7 @@ module.exports = withPWA({
     disable: process.env.NODE_ENV !== "production",
     dest: "public",
     runtimeCaching,
+    buildExcludes: [/middleware-manifest\.json$/],
   },
   images: {
     domains: ["images.contentstack.io"],
