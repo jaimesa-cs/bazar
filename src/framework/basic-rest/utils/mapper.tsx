@@ -318,6 +318,7 @@ const getPageHeader = (input: any): PageHeader => {
 };
 const getComposition = (input: any, type: string = "composition"): Composition | null => {
   // console.log("COMPOSITION", input);
+  if (input === undefined) return null;
   try {
     switch (type) {
       case "error_pages":
