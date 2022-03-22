@@ -174,8 +174,8 @@ export const fetchComposition = <T extends Composition>(
   type: string,
   includes?: string[],
   jsonRteFields?: string[]
-): Promise<T> => {
-  return new Promise<T>((resolve, reject) => {
+): Promise<T | null> => {
+  return new Promise<T | null>((resolve, reject) => {
     const query = stack.ContentType(type).Query();
     if (includes) {
       query.includeReference(includes);
@@ -196,7 +196,6 @@ export const fetchComposition = <T extends Composition>(
           });
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
-        console.log("fetchComposition :: result", result[0][0]);
         resolve(mapper().toComposition<T>(result[0][0], type));
       })
       .catch((error) => {
