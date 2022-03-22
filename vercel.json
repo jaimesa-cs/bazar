@@ -1,10 +1,10 @@
 {
   "env": {
-    "NEXT_PUBLIC_REST_API_ENDPOINT": "/api"
+    "NEXT_PUBLIC_REST_API_ENDPOINT": "/"
   },
   "build": {
-    "production": {
-      "NEXT_PUBLIC_REST_API_ENDPOINT": "/api"
+    "env": {
+      "NEXT_PUBLIC_REST_API_ENDPOINT": "/"
     }
   }
 }
