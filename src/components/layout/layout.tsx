@@ -1,5 +1,6 @@
 import Button from "@components/ui/button";
 import CookieBar from "@components/common/cookie-bar";
+import ErrorBoundary from "@components/error-boundary/error-boundary";
 import Footer from "@components/layout/footer/footer";
 import Header from "@components/layout/header/header";
 import MobileNavigation from "@components/layout/mobile-navigation/mobile-navigation";
@@ -45,7 +46,9 @@ const Layout: React.FC = ({ children }) => {
           ],
         }}
       />
-      <Header />
+      <ErrorBoundary identifier="header">
+        <Header />
+      </ErrorBoundary>
       <main
         className="relative flex-grow"
         style={{
@@ -55,18 +58,26 @@ const Layout: React.FC = ({ children }) => {
       >
         {children}
       </main>
-      <Footer />
-      <MobileNavigation />
-      <Search />
-      <CookieBar
-        title={t("text-cookies-title")}
-        hide={acceptedCookies}
-        action={
-          <Button onClick={() => onAcceptCookies()} variant="slim">
-            {t("text-accept-cookies")}
-          </Button>
-        }
-      />
+      <ErrorBoundary identifier="footer">
+        <Footer />
+      </ErrorBoundary>
+      <ErrorBoundary identifier="mobile-navigation">
+        <MobileNavigation />
+      </ErrorBoundary>
+      <ErrorBoundary identifier="search">
+        <Search />
+      </ErrorBoundary>
+      <ErrorBoundary identifier="cookie-bar">
+        <CookieBar
+          title={t("text-cookies-title")}
+          hide={acceptedCookies}
+          action={
+            <Button onClick={() => onAcceptCookies()} variant="slim">
+              {t("text-accept-cookies")}
+            </Button>
+          }
+        />
+      </ErrorBoundary>
     </div>
   );
 };
