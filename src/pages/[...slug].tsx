@@ -3,6 +3,7 @@ import { fetchComposition, getCompositionPaths } from "@framework/utils/contents
 
 import Container from "@components/ui/container";
 import { Element } from "react-scroll";
+import ErrorBoundary from "@components/error-boundary/error-boundary";
 import ErrorInformation from "@components/404/error-information";
 import Layout from "@components/layout/layout";
 import PageHeader from "@components/ui/page-header";
@@ -18,17 +19,23 @@ interface StaticPageProps {
   path?: string;
 }
 export default function CatchAll({ path, page }: StaticPageProps) {
-  // console.log("STATIC_PAGE", page);
+  console.log("STATIC_PAGE", page);
   return page ? (
     <>
       {page.header && (
-        <PageHeader
-          pageHeader={page.header.title}
-          pageSubHeader={page.header.subtitle}
-          imageUrl={page.header.banner.image.desktop.url}
-        />
+        <ErrorBoundary identifier="page-header">
+          <PageHeader
+            pageHeader={page.header.title}
+            pageSubHeader={page.header.subtitle}
+            imageUrl={page.header.banner.image.desktop.url}
+          />
+        </ErrorBoundary>
       )}
-      {page.blocks && <RenderModularBlocks blocks={page.blocks} />}
+      {page.blocks && (
+        <ErrorBoundary identifier="modular-blocks">
+          <RenderModularBlocks blocks={page.blocks} />
+        </ErrorBoundary>
+      )}
     </>
   ) : (
     <Container>
@@ -94,7 +101,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
     // console.log("PATHS", paths);
     return {
       paths: paths,
-      fallback: true,
+      fallback: "blocking",
     };
   });
 };

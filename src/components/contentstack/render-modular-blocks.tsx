@@ -100,10 +100,10 @@ export default function RenderModularBlocks({ blocks }: RenderModularBlocksProps
   );
 }
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  //TODO: Get the static paths from contentstack
-  return {
-    paths: ["/faq"], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
-  };
-};
+// export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+//   //TODO: Get the static paths from contentstack
+//   return {
+//     paths: ["/faq"], //indicates that no page needs be created at build time
+//     fallback: "blocking", //indicates the type of fallback
+//   };
+// };

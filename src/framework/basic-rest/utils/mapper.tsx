@@ -316,150 +316,160 @@ const getPageHeader = (input: any): PageHeader => {
   }
   return NEW_HEADER;
 };
-const getComposition = (input: any, type: string = "composition"): Composition => {
-  console.log("COMPOSITION", input);
-  switch (type) {
-    case "error_pages":
-      const errorPage: IErrorPage = {
-        title: input.title,
-        url: input.url,
-        type: input.type,
-        error: input.error_message,
-        errorNumber: input.error_number,
-      };
-      return errorPage;
-    case "static_composition":
-      const page: StaticComposition = {
-        title: input.title,
-        url: input.url,
-        type: input.type,
-        header: getPageHeader(input.header),
-        blocks: [],
-      };
+const getComposition = (input: any, type: string = "composition"): Composition | undefined => {
+  // console.log("COMPOSITION", input);
+  if (input === undefined) return input;
+  try {
+    switch (type) {
+      case "error_pages":
+        const errorPage: IErrorPage = {
+          title: input.title,
+          url: input.url,
+          type: input.type,
+          error: input.error_message,
+          errorNumber: input.error_number,
+        };
+        return errorPage;
+      case "static_composition":
+        const page: StaticComposition = {
+          title: input.title,
+          url: input.url,
+          type: input.type,
+          header: getPageHeader(input.header),
+          blocks: [],
+        };
 
-      if (input.dynamic_blocks) {
-        input.dynamic_blocks.map((db: any) => {
-          // console.log("BLOCK", db);
-          //FAQ
-          if (db.faq && db.faq.questions && db.faq.questions.length > 0) {
-            page.blocks.push({ type: "faq", block: { questions: getFaq(db.faq.questions) } });
-          }
+        if (input.dynamic_blocks) {
+          input.dynamic_blocks.map((db: any) => {
+            // console.log("BLOCK", db);
+            //FAQ
+            if (db.faq && db.faq.questions && db.faq.questions.length > 0) {
+              page.blocks.push({ type: "faq", block: { questions: getFaq(db.faq.questions) } });
+            }
 
-          //EMAIL SUBSCRIPTION
-          if (
-            db.mail_list_subscription &&
-            db.mail_list_subscription.email_subscription &&
-            db.mail_list_subscription.email_subscription.length > 0
-          ) {
-            const e: any = db.mail_list_subscription.email_subscription[0];
-            page.blocks.push({
-              type: "email_subscription",
-              block: {
-                title: e.title,
-                subtitle: e.subtitle,
-                buttonLabel: e.button_label,
-                inputPlaceholder: e.input_placeholder,
-              },
-            });
-          }
-          //PARAGRAPHS
-          if (
-            db.paragraphs_with_links &&
-            db.paragraphs_with_links.paragraphs &&
-            db.paragraphs_with_links.paragraphs.length > 0
-          ) {
-            page.blocks.push({
-              type: "paragraphs",
-              block: {
-                paragraphs: getParagraphs(db.paragraphs_with_links.paragraphs),
-              },
-            });
-          }
-        });
-      }
-      // console.log("PAGE", page);
-      return page;
-    case "composition":
-      const home: Home = {
-        title: input.title,
-        url: input.url,
-        type: input.type,
-      };
+            //EMAIL SUBSCRIPTION
+            if (
+              db.mail_list_subscription &&
+              db.mail_list_subscription.email_subscription &&
+              db.mail_list_subscription.email_subscription.length > 0
+            ) {
+              const e: any = db.mail_list_subscription.email_subscription[0];
+              page.blocks.push({
+                type: "email_subscription",
+                block: {
+                  title: e.title,
+                  subtitle: e.subtitle,
+                  buttonLabel: e.button_label,
+                  inputPlaceholder: e.input_placeholder,
+                },
+              });
+            }
+            //PARAGRAPHS
+            if (
+              db.paragraphs_with_links &&
+              db.paragraphs_with_links.paragraphs &&
+              db.paragraphs_with_links.paragraphs.length > 0
+            ) {
+              page.blocks.push({
+                type: "paragraphs",
+                block: {
+                  paragraphs: getParagraphs(db.paragraphs_with_links.paragraphs),
+                },
+              });
+            }
+          });
+        }
+        // console.log("PAGE", page);
+        return page;
+      case "composition":
+        const home: Home = {
+          title: input.title,
+          url: input.url,
+          type: input.type,
+        };
 
-      if (input.top_banner) {
-        home.banner = assembleMasonry(input.top_banner);
-      }
-      if (input.sliding_banner && input.sliding_banner.banners && input.sliding_banner.banners.length > 0) {
-        home.slider = toBannerList(input.sliding_banner.banners);
-      }
-      return home;
+        if (input.top_banner) {
+          home.banner = assembleMasonry(input.top_banner);
+        }
+        if (input.sliding_banner && input.sliding_banner.banners && input.sliding_banner.banners.length > 0) {
+          home.slider = toBannerList(input.sliding_banner.banners);
+        }
+        return home;
 
-    case "footer":
-      const footer: IFooter = {
-        title: input.title,
-        url: input.url,
-        type: type,
-        copyright: input.copyright,
-        widgets: [],
-        payment: [],
-      };
-      if (input.links && input.links.length > 0) {
-        footer.widgets.push(...getWidgets(input.links));
-      }
-      if (input.payment_methods && input.payment_methods.links && input.payment_methods.links.length > 0) {
-        footer.payment.push(...getPayments(input.payment_methods.links));
-      }
+      case "footer":
+        const footer: IFooter = {
+          title: input.title,
+          url: input.url,
+          type: type,
+          copyright: input.copyright,
+          widgets: [],
+          payment: [],
+        };
+        if (input.links && input.links.length > 0) {
+          footer.widgets.push(...getWidgets(input.links));
+        }
+        if (input.payment_methods && input.payment_methods.links && input.payment_methods.links.length > 0) {
+          footer.payment.push(...getPayments(input.payment_methods.links));
+        }
 
-      return footer;
-    case "navigation":
-      const menu: NavigationItem[] = [];
-      if (input.links) {
-        input.links.map((e: any, index: number) => {
-          if (e.category && e.category.length > 0) {
-            //Is Category!
-            const column: NavigationItem = {
-              id: index.toString(),
-              path: e.category[0].url,
-              label: e.category[0].title,
-              columns: [],
-            };
+        return footer;
+      case "navigation":
+        const menu: NavigationItem[] = [];
+        if (input.links) {
+          input.links.map((e: any, index: number) => {
+            if (e.category && e.category.length > 0) {
+              //Is Category!
+              const column: NavigationItem = {
+                id: index.toString(),
+                path: e.category[0].url,
+                label: e.category[0].title,
+                columns: [],
+              };
 
-            const columnItem: NavigationColumn = {
-              id: index.toString(),
-              path: `search?q=${e.category[0].url.replace("/", "")}`,
-              label: e.category[0].title,
-              columnItems: getColumnItems(e.category[0].categories),
-            };
-            column.columns?.push(columnItem);
-            menu.push(column);
-          } else if (e.link) {
-            //Is Link!
-            menu.push({
-              id: index.toString(),
-              path: e.link.href,
-              label: e.link.title,
-              subMenu: getLinks(e.nested_links),
-            });
-          }
-        });
-      }
+              const columnItem: NavigationColumn = {
+                id: index.toString(),
+                path: `search?q=${e.category[0].url.replace("/", "")}`,
+                label: e.category[0].title,
+                columnItems: getColumnItems(e.category[0].categories),
+              };
+              column.columns?.push(columnItem);
+              menu.push(column);
+            } else if (e.link) {
+              //Is Link!
+              menu.push({
+                id: index.toString(),
+                path: e.link.href,
+                label: e.link.title,
+                subMenu: getLinks(e.nested_links),
+              });
+            }
+          });
+        }
 
-      const nav: Navigation = {
-        menu: menu,
-        title: input.title,
-        url: input.url,
-        type: input.type,
-      };
-      // console.log("Navigation", nav);
-      return nav;
+        const nav: Navigation = {
+          menu: menu,
+          title: input.title,
+          url: input.url,
+          type: input.type,
+        };
+        // console.log("Navigation", nav);
+        return nav;
+    }
+  } catch (e) {
+    console.log("ERROR", e);
+    return undefined;
   }
   throw `Mapping for type '${type}' not implemented.`;
 };
 
 export const mapper = () => {
   return {
-    toComposition: <T extends Composition>(input: any, type?: string): T => {
-      return getComposition(input, type) as T;
+    toComposition: <T extends Composition>(input: any, type?: string): T | undefined => {
+      const c = getComposition(input, type);
+      if (c !== undefined) {
+        return c as T;
+      }
+      return undefined;
     },
   };
 };
