@@ -196,7 +196,7 @@ export const fetchComposition = <T extends Composition>(
           });
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
-        console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
+        // console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
         resolve(mapper().toComposition<T>(result[0][0], type));
       })
       .catch((error) => {
