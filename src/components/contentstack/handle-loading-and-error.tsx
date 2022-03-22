@@ -1,4 +1,3 @@
-import Container from "@components/ui/container";
 import DefaultError from "./default-error";
 import { ReactNode } from "react";
 

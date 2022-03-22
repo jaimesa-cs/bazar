@@ -3,6 +3,7 @@ import * as contentstack from "contentstack";
 
 import { Composition, Home, Navigation } from "@framework/types";
 
+import { Console } from "console";
 import { mapper } from "./mapper";
 
 const getRegion = (region: string | undefined): contentstack.Region => {
@@ -179,7 +180,6 @@ export const fetchComposition = <T extends Composition>(
     if (includes) {
       query.includeReference(includes);
     }
-
     query.includeOwner().toJSON();
     query.language(locale.toLowerCase() || "en-us");
     query.includeFallback();
@@ -196,7 +196,7 @@ export const fetchComposition = <T extends Composition>(
           });
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
-
+        console.log("fetchComposition :: result", result[0][0]);
         resolve(mapper().toComposition<T>(result[0][0], type));
       })
       .catch((error) => {

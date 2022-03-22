@@ -317,7 +317,7 @@ const getPageHeader = (input: any): PageHeader => {
   return NEW_HEADER;
 };
 const getComposition = (input: any, type: string = "composition"): Composition => {
-  // console.log("COMPOSITION", input);
+  console.log("COMPOSITION", input);
   switch (type) {
     case "error_pages":
       const errorPage: IErrorPage = {
