@@ -64,21 +64,25 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
     path = path.replace(`/${locale}`, "");
   }
 
-  return fetchComposition<StaticComposition>(
-    path,
-    locale,
-    "static_composition",
-    staticPageIncludes,
-    jsonRteFields
-  ).then((page) => {
-    return {
-      props: {
-        page: page as StaticComposition,
-        ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
-      },
-      revalidate: 10, // In seconds,
-    };
-  });
+  return fetchComposition<StaticComposition>(path, locale, "static_composition", staticPageIncludes, jsonRteFields)
+    .then((page) => {
+      return {
+        props: {
+          page: page as StaticComposition,
+          ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
+        },
+        revalidate: 10, // In seconds,
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+      return {
+        props: {
+          page: null,
+          ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
+        },
+      };
+    });
 };
 
 export const getStaticPaths: GetStaticPaths = async ({ locales }) => {

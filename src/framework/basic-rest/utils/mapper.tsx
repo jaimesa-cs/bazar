@@ -322,6 +322,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
   try {
     switch (type) {
       case "error_pages":
+        console.log("ERROR PAGE", input);
         const errorPage: IErrorPage = {
           title: input.title,
           url: input.url,
@@ -331,6 +332,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         };
         return errorPage;
       case "static_composition":
+        console.log("STATIC COMPOSITION", input);
         const page: StaticComposition = {
           title: input.title,
           url: input.url,
@@ -340,10 +342,12 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         };
 
         if (input.dynamic_blocks) {
+          console.log("DYNAMIC_BLOCKS", input.dynamic_blocks);
           input.dynamic_blocks.map((db: any) => {
             // console.log("BLOCK", db);
             //FAQ
             if (db.faq && db.faq.questions && db.faq.questions.length > 0) {
+              console.log("FAQ", db.faq);
               page.blocks.push({ type: "faq", block: { questions: getFaq(db.faq.questions) } });
             }
 
@@ -353,6 +357,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
               db.mail_list_subscription.email_subscription &&
               db.mail_list_subscription.email_subscription.length > 0
             ) {
+              console.log("EMAIL SUBSCRIPTION", db.mail_list_subscription);
               const e: any = db.mail_list_subscription.email_subscription[0];
               page.blocks.push({
                 type: "email_subscription",
@@ -370,6 +375,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
               db.paragraphs_with_links.paragraphs &&
               db.paragraphs_with_links.paragraphs.length > 0
             ) {
+              console.log("PARAGRAPHS", db.paragraphs_with_links);
               page.blocks.push({
                 type: "paragraphs",
                 block: {
@@ -379,9 +385,10 @@ const getComposition = (input: any, type: string = "composition"): Composition |
             }
           });
         }
-        // console.log("PAGE", page);
+        console.log("PAGE", page);
         return page;
       case "composition":
+        console.log("COMPOSITION (HOME)", input);
         const home: Home = {
           title: input.title,
           url: input.url,
@@ -397,6 +404,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         return home;
 
       case "footer":
+        console.log("FOOTER", input);
         const footer: IFooter = {
           title: input.title,
           url: input.url,
@@ -414,6 +422,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
 
         return footer;
       case "navigation":
+        console.log("NAVIGATION", input);
         const menu: NavigationItem[] = [];
         if (input.links) {
           input.links.map((e: any, index: number) => {
