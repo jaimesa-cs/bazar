@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import BannerBlock from "@containers/banner-block";
 import BannerCard from "@components/common/banner-card";
 import BannerSliderBlock from "@containers/banner-slider-block";
@@ -24,15 +26,66 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useHomeQuery } from "@framework/content/get-content";
 import { useRouter } from "next/router";
 
+interface IUserProfile {
+  id: string;
+  colorPreference: string;
+  promoText: string;
+}
+
+const DEFAULT_USER_PROFILE: IUserProfile = {
+  id: "1",
+  colorPreference: "white",
+  promoText: "Flash Sale",
+};
+
+const userProfiles: IUserProfile[] = [
+  DEFAULT_USER_PROFILE,
+  {
+    id: "2",
+    colorPreference: "#3399aa",
+    promoText: "Variant A - Free Shipping",
+  },
+  {
+    id: "3",
+    colorPreference: "#DD4322",
+    promoText: "Variant B - 20% Off",
+  },
+];
+
 export default function Home() {
   const { locale } = useRouter();
   const { data: page, isLoading, error } = useHomeQuery(locale);
+  const [personalizationCategory, setPersonalizationCategory] = useState<string | undefined>();
+  const [variant, setVariant] = useState<IUserProfile | undefined>(DEFAULT_USER_PROFILE);
+
+  const callToPersonalizationSystem = (variations: string[]) => {
+    const rand = Math.random() * variations.length + 1;
+    if (rand > variations.length) return "all";
+    return variations[Math.floor(rand)];
+  };
+
+  const callToABSystem = (): IUserProfile => {
+    const rand = Math.random() * 3;
+    return userProfiles[Math.floor(rand)];
+  };
+
+  React.useEffect(() => {
+    if (page && page.personalization) {
+      setPersonalizationCategory(callToPersonalizationSystem(page.personalization));
+      setVariant(callToABSystem());
+    }
+  }, [page]);
 
   return (
     <HandleLoadingOrError isLoading={isLoading} error={error}>
       {page && page.banner && <BannerBlock data={page.banner} />}
       <Container>
-        <ProductsFlashSaleBlock date={"2023-03-01T01:02:03"} />
+        <ProductsFlashSaleBlock
+          date={"2023-03-01T01:02:03"}
+          category={personalizationCategory}
+          sectionHeading={variant?.promoText}
+          bgColor={variant?.colorPreference}
+        />
       </Container>
       {page && page.slider && <BannerSliderBlock data={page.slider} />}
       <Container>

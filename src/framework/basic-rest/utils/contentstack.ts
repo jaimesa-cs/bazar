@@ -1,9 +1,7 @@
 import * as Utils from "@contentstack/utils";
 import * as contentstack from "contentstack";
 
-import { Composition, Home, Navigation } from "@framework/types";
-
-import { Console } from "console";
+import { Composition } from "@framework/types";
 import { mapper } from "./mapper";
 
 const getRegion = (region: string | undefined): contentstack.Region => {

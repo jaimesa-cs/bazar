@@ -26,6 +26,7 @@ export type QueryOptionsType = {
   category?: string;
   status?: string;
   limit?: number;
+  variant?: string;
 };
 
 export type ShopsQueryOptionsType = {
@@ -205,6 +206,7 @@ export interface StaticComposition extends Composition {
 export interface Home extends Composition {
   banner?: Banner[];
   slider?: Banner[];
+  personalization?: string[];
 }
 
 export interface IWidgetItem {

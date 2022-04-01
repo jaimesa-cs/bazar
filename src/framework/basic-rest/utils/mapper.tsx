@@ -401,6 +401,9 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         if (input.sliding_banner && input.sliding_banner.banners && input.sliding_banner.banners.length > 0) {
           home.slider = toBannerList(input.sliding_banner.banners);
         }
+        if (input.personalization && input.personalization.personalization_options) {
+          home.personalization = input.personalization.personalization_options;
+        }
         return home;
 
       case "footer":

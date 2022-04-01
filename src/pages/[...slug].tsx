@@ -75,7 +75,7 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
       };
     })
     .catch((err) => {
-      console.log(err);
+      console.log("ERROR [...slug]", err);
       return {
         props: {
           page: null,
