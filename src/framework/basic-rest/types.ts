@@ -198,6 +198,12 @@ export interface PageHeader {
   banner: Banner;
 }
 
+export interface IABTest {
+  default?: Banner;
+  variant_a?: Banner;
+  variant_b?: Banner;
+}
+
 export interface StaticComposition extends Composition {
   header: PageHeader;
   blocks: ModularBlock[];
@@ -207,6 +213,7 @@ export interface Home extends Composition {
   banner?: Banner[];
   slider?: Banner[];
   personalization?: string[];
+  abTesting?: IABTest;
 }
 
 export interface IWidgetItem {

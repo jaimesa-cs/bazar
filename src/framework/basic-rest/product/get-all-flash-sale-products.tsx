@@ -13,7 +13,7 @@ export const fetchFlashSaleProducts = async ({ queryKey }: any) => {
       productFlashSellGridTwo: [...data.productFlashSellGridTwo.filter((p: any) => p.categoryAB === _params.category)],
     };
   }
-  console.log("data", data);
+
   return data;
 };
 export const useFlashSaleProductsQuery = (options: QueryOptionsType): any => {

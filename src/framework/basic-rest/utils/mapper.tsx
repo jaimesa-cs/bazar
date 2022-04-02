@@ -4,6 +4,7 @@ import {
   Composition,
   FaqQuestion,
   Home,
+  IABTest,
   IErrorPage,
   IFooter,
   IPayment,
@@ -36,6 +37,15 @@ const NEW_HEADER: PageHeader = {
     id: 0,
     title: "",
   },
+};
+
+const ABTestBannerSize: BannerSize = {
+  mobile: { width: 450, height: 180 },
+  desktop: {
+    width: 1800,
+    height: 570,
+  },
+  type: "large",
 };
 
 const MasonrySquareSize: BannerSize = {
@@ -404,6 +414,21 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         if (input.personalization && input.personalization.personalization_options) {
           home.personalization = input.personalization.personalization_options;
         }
+
+        if (input.a_b_testing) {
+          let abTesting: IABTest = { default: undefined, variant_a: undefined, variant_b: undefined };
+          if (input.a_b_testing.default) {
+            abTesting.default = toBanner(input.a_b_testing.default, ABTestBannerSize);
+          }
+          if (input.a_b_testing.variant_a) {
+            abTesting.variant_a = toBanner(input.a_b_testing.variant_a, ABTestBannerSize);
+          }
+          if (input.a_b_testing.variant_b) {
+            abTesting.variant_b = toBanner(input.a_b_testing.variant_b, ABTestBannerSize);
+          }
+          home.abTesting = abTesting;
+        }
+        console.log("HOME", home);
         return home;
 
       case "footer":

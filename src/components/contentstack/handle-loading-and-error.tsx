@@ -1,5 +1,6 @@
 import DefaultError from "./default-error";
 import { ReactNode } from "react";
+import Spinner from "./spinner";
 
 interface DefaultErrorProps {
   isLoading: boolean;
@@ -7,5 +8,13 @@ interface DefaultErrorProps {
   children: ReactNode;
 }
 export default function HandleLoadingOrError({ children, isLoading, error }: DefaultErrorProps) {
-  return isLoading ? <>Loading...</> : error ? <DefaultError error={error} /> : <>{children}</>;
+  return isLoading ? (
+    <>
+      <Spinner />
+    </>
+  ) : error ? (
+    <DefaultError error={error} />
+  ) : (
+    <>{children}</>
+  );
 }
