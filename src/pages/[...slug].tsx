@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { fetchComposition, getCompositionPaths } from "@framework/utils/contentstack";
+import { fetchEntry, getCompositionPaths } from "@framework/utils/contentstack";
 
 import Container from "@components/ui/container";
 import { Element } from "react-scroll";
@@ -64,21 +64,31 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
     path = path.replace(`/${locale}`, "");
   }
 
-  return fetchComposition<StaticComposition>(
-    path,
+  return fetchEntry<StaticComposition>(
     locale,
     "static_composition",
+    [{ key: "url", value: path }],
     staticPageIncludes,
     jsonRteFields
-  ).then((page) => {
-    return {
-      props: {
-        page: page as StaticComposition,
-        ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
-      },
-      revalidate: 10, // In seconds,
-    };
-  });
+  )
+    .then((page) => {
+      return {
+        props: {
+          page: page as StaticComposition,
+          ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
+        },
+        revalidate: 10, // In seconds,
+      };
+    })
+    .catch((err) => {
+      console.log("ERROR [...slug]", err);
+      return {
+        props: {
+          page: null,
+          ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
+        },
+      };
+    });
 };
 
 export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
@@ -101,7 +111,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
     // console.log("PATHS", paths);
     return {
       paths: paths,
-      fallback: "blocking",
+      fallback: true,
     };
   });
 };

@@ -11,7 +11,7 @@ const Footer: React.FC = () => {
     data: footer,
     error,
     isLoading,
-  } = useCompositionQuery<IFooter>("/footer", locale, "footer", ["links.links.category"]);
+  } = useCompositionQuery<IFooter>(locale, "footer", [{ key: "url", value: "/footer" }], ["links.links.category"]);
 
   return (
     <HandleLoadingOrError isLoading={isLoading} error={error}>

@@ -4,7 +4,7 @@ import { GetStaticProps } from "next";
 import HandleLoadingOrError from "@components/contentstack/handle-loading-and-error";
 import { IErrorPage } from "@framework/types";
 import Layout from "@components/layout/layout";
-import { fetchComposition } from "@framework/utils/contentstack";
+import { fetchEntry } from "@framework/utils/contentstack";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useCompositionQuery } from "@framework/content/get-content";
 import { useRouter } from "next/router";
