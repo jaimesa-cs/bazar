@@ -1,5 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { fetchComposition, getCompositionPaths } from "@framework/utils/contentstack";
+import { fetchEntry, getCompositionPaths } from "@framework/utils/contentstack";
 
 import Container from "@components/ui/container";
 import { Element } from "react-scroll";
@@ -64,7 +64,13 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
     path = path.replace(`/${locale}`, "");
   }
 
-  return fetchComposition<StaticComposition>(path, locale, "static_composition", staticPageIncludes, jsonRteFields)
+  return fetchEntry<StaticComposition>(
+    locale,
+    "static_composition",
+    [{ key: "url", value: path }],
+    staticPageIncludes,
+    jsonRteFields
+  )
     .then((page) => {
       return {
         props: {

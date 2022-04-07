@@ -195,13 +195,14 @@ export interface Faq {
 export interface PageHeader {
   title: string;
   subtitle: string;
-  banner: Banner;
+  banner: IBanner;
 }
 
 export interface IABTest {
-  default?: Banner;
-  variant_a?: Banner;
-  variant_b?: Banner;
+  campaign?: string;
+  default?: IBanner;
+  variant_a?: IBanner;
+  variant_b?: IBanner;
 }
 
 export interface StaticComposition extends Composition {
@@ -210,8 +211,8 @@ export interface StaticComposition extends Composition {
 }
 
 export interface Home extends Composition {
-  banner?: Banner[];
-  slider?: Banner[];
+  banner?: IBanner[];
+  slider?: IBanner[];
   personalization?: string[];
   abTesting?: IABTest;
 }
@@ -259,10 +260,22 @@ export type BannerImages = {
   desktop: Image;
 };
 
-export type Banner = {
+// export type Banner = {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   image: BannerImages;
+//   type: "small" | "medium" | "large";
+// };
+export interface IBanner extends Composition {
   id: number;
   title: string;
   slug: string;
   image: BannerImages;
   type: "small" | "medium" | "large";
-};
+}
+
+export interface KeyValuePair {
+  key: string;
+  value: string | number | boolean;
+}

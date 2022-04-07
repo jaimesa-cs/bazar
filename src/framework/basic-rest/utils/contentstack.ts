@@ -1,7 +1,8 @@
 import * as Utils from "@contentstack/utils";
 import * as contentstack from "contentstack";
 
-import { Composition } from "@framework/types";
+import { Composition, KeyValuePair } from "@framework/types";
+
 import { mapper } from "./mapper";
 
 const getRegion = (region: string | undefined): contentstack.Region => {
@@ -166,24 +167,31 @@ export const getEntriesByUrl = <T extends any>({
 };
 
 //Bazar Specific Code
-export const fetchComposition = <T extends Composition>(
-  url: string,
+
+//TODO: Refactor this method to move url as another query parameter, and remove url from the signature
+export const fetchEntry = <T extends Composition>(
   locale: string | undefined = "en-us",
   type: string,
+  queryParams: KeyValuePair[],
   includes?: string[],
   jsonRteFields?: string[]
 ): Promise<T | undefined> => {
   return new Promise<T | undefined>((resolve, reject) => {
-    const query = stack.ContentType(type).Query();
+    let query = stack.ContentType(type).Query();
     if (includes) {
       query.includeReference(includes);
     }
     query.includeOwner().toJSON();
     query.language(locale.toLowerCase() || "en-us");
     query.includeFallback();
-    // console.log("QUERY", query);
-    const data = query.where("url", url).find();
-    data
+
+    for (let i = 0; i < queryParams.length; i++) {
+      // console.log("QUERY PARAMS", queryParams[i]);
+      query.where(queryParams[i].key, queryParams[i].value);
+    }
+
+    query
+      .find()
       .then((result) => {
         // console.log("fetchComposition", result[0][0]);
         if (jsonRteFields) {

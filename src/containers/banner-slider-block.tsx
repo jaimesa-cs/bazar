@@ -1,12 +1,12 @@
-import { Banner } from "@framework/types";
 import BannerCard from "@components/common/banner-card";
 import Carousel from "@components/ui/carousel/carousel";
+import { IBanner } from "@framework/types";
 // import { promotionBanner } from "@framework/static/banner";
 import { ROUTES } from "@utils/routes";
 import { SwiperSlide } from "swiper/react";
 
 interface BannerProps {
-  data?: Banner[];
+  data?: IBanner[];
   className?: string;
 }
 
@@ -33,7 +33,7 @@ const BannerSliderBlock: React.FC<BannerProps> = ({ className = "mb-12 md:mb-14 
           paginationVariant="circle"
           buttonGroupClassName="hidden"
         >
-          {data?.map((banner: Banner) => (
+          {data?.map((banner: IBanner) => (
             <SwiperSlide key={`banner--key${banner.id}`} className="px-1.5 md:px-2.5 xl:px-3.5">
               <BannerCard banner={banner} effectActive={true} href={`${ROUTES.COLLECTIONS}${banner.slug}`} />
             </SwiperSlide>

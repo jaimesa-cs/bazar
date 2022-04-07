@@ -1,10 +1,10 @@
 import {
-  Banner,
   BaseNavigationItem,
   Composition,
   FaqQuestion,
   Home,
   IABTest,
+  IBanner,
   IErrorPage,
   IFooter,
   IPayment,
@@ -24,6 +24,7 @@ const NEW_HEADER: PageHeader = {
   title: "",
   subtitle: "",
   banner: {
+    url: "",
     image: {
       mobile: {
         url: "",
@@ -39,7 +40,7 @@ const NEW_HEADER: PageHeader = {
   },
 };
 
-const ABTestBannerSize: BannerSize = {
+export const ABTestBannerSize: BannerSize = {
   mobile: { width: 450, height: 180 },
   desktop: {
     width: 1800,
@@ -80,7 +81,7 @@ const SlidingRectSizes: BannerSize = {
   type: "small",
 };
 
-interface BannerSize {
+export interface BannerSize {
   mobile: {
     width: number;
     height: number;
@@ -92,9 +93,11 @@ interface BannerSize {
   type: "small" | "medium" | "large";
 }
 
-const toBanner = (e: any, size: BannerSize): Banner => {
+export const toBannerFromComposition = (c: any, size: BannerSize): IBanner => {
+  const e = c.banner;
   return {
     id: e.image.uid,
+    url: "",
     title: e.link.title,
     slug: e.link.href,
     image: {
@@ -113,17 +116,39 @@ const toBanner = (e: any, size: BannerSize): Banner => {
   };
 };
 
-const toBannerList = (s: any): Banner[] => {
-  const slider: Banner[] = [];
+const toBanner = (e: any, size: BannerSize): IBanner => {
+  return {
+    id: e.image.uid,
+    url: "",
+    title: e.link.title,
+    slug: e.link.href,
+    image: {
+      mobile: {
+        url: e.image.url,
+        height: size.mobile.height,
+        width: size.mobile.width,
+      },
+      desktop: {
+        url: e.image.url,
+        height: size.desktop.height,
+        width: size.desktop.width,
+      },
+    },
+    type: size.type,
+  };
+};
+
+const toBannerList = (s: any): IBanner[] => {
+  const slider: IBanner[] = [];
   s.map((e: any) => {
     slider.push(toBanner(e, SlidingRectSizes));
   });
   return slider;
 };
 
-const assembleMasonry = (top_banner: any): Banner[] => {
-  const squareBanners: Banner[] = [];
-  const rectBanners: Banner[] = [];
+const assembleMasonry = (top_banner: any): IBanner[] => {
+  const squareBanners: IBanner[] = [];
+  const rectBanners: IBanner[] = [];
 
   if (top_banner.rectangular_blocks) {
     top_banner.rectangular_blocks.map((b: any) => {
@@ -331,6 +356,11 @@ const getComposition = (input: any, type: string = "composition"): Composition |
   if (input === undefined) return input;
   try {
     switch (type) {
+      case "banner_variation":
+        // console.log("BANNER VARIATION", input);
+        const abBanner = toBanner(input.banner, ABTestBannerSize);
+        // console.log("ABBanner", abBanner);
+        return abBanner;
       case "error_pages":
         // console.log("ERROR PAGE", input);
         const errorPage: IErrorPage = {
@@ -426,6 +456,11 @@ const getComposition = (input: any, type: string = "composition"): Composition |
           if (input.a_b_testing.variant_b) {
             abTesting.variant_b = toBanner(input.a_b_testing.variant_b, ABTestBannerSize);
           }
+
+          if (input.a_b_testing.campaign) {
+            abTesting.campaign = input.a_b_testing.campaign;
+          }
+
           home.abTesting = abTesting;
         }
         console.log("HOME", home);

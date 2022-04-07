@@ -1,6 +1,6 @@
+import AbTesting, { ABProvider } from "@components/contentstack/ab-testing";
 import React, { useState } from "react";
 
-import AbTesting from "@components/contentstack/ab-testing";
 import BannerBlock from "@containers/banner-block";
 import BannerSliderBlock from "@containers/banner-slider-block";
 import BannerWithProducts from "@containers/banner-with-products";
@@ -49,8 +49,13 @@ const userProfiles: IUserProfile[] = [
   },
 ];
 
+const AB_PROVIDER = "optimizely";
+
 export default function Home() {
   const { locale, query } = useRouter();
+
+  const { pzn, providerOverride } = query;
+
   const { data: page, isLoading, error } = useHomeQuery(locale);
   const [personalizationCategory, setPersonalizationCategory] = useState<string | undefined>();
   const [variant, setVariant] = useState<IUserProfile | undefined>(DEFAULT_USER_PROFILE);
@@ -67,7 +72,6 @@ export default function Home() {
   };
 
   React.useEffect(() => {
-    const { pzn } = query;
     if (pzn && page && page.personalization) {
       setPersonalizationCategory(callToPersonalizationSystem(page.personalization));
       setVariant(callToABSystem());
@@ -78,7 +82,9 @@ export default function Home() {
 
   return (
     <HandleLoadingOrError isLoading={isLoading} error={error}>
-      {page?.abTesting && <AbTesting experiment={page?.abTesting} />}
+      {page?.abTesting && (
+        <AbTesting provider={(providerOverride as ABProvider) || AB_PROVIDER} experiment={page?.abTesting} />
+      )}
       {page && page.banner && <BannerBlock data={page.banner} />}
       <Container>
         <ProductsFlashSaleBlock

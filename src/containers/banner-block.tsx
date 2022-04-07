@@ -1,8 +1,8 @@
-import { Banner } from "@framework/types";
 import BannerCard from "@components/common/banner-card";
+import { IBanner } from "@framework/types";
 import { ROUTES } from "@utils/routes";
 interface BannerProps {
-  data?: Banner[];
+  data?: IBanner[];
   className?: string;
 }
 
