@@ -49,12 +49,12 @@ const userProfiles: IUserProfile[] = [
   },
 ];
 
-const AB_PROVIDER = "optimizely";
+const AB_PROVIDER = "";
 
 export default function Home() {
   const { locale, query } = useRouter();
 
-  const { pzn, providerOverride } = query;
+  const { pzn, abTestingWith } = query;
 
   const { data: page, isLoading, error } = useHomeQuery(locale);
   const [personalizationCategory, setPersonalizationCategory] = useState<string | undefined>();
@@ -83,7 +83,7 @@ export default function Home() {
   return (
     <HandleLoadingOrError isLoading={isLoading} error={error}>
       {page?.abTesting && (
-        <AbTesting provider={(providerOverride as ABProvider) || AB_PROVIDER} experiment={page?.abTesting} />
+        <AbTesting provider={(abTestingWith as ABProvider) || AB_PROVIDER} experiment={page?.abTesting} />
       )}
       {page && page.banner && <BannerBlock data={page.banner} />}
       <Container>
