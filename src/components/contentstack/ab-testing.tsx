@@ -1,24 +1,27 @@
 import * as optimizelyReactSDK from "@optimizely/react-sdk";
 
+import { CanvasClient, ComponentInstance } from "@uniformdev/canvas";
+import { Composition, Slot } from "@uniformdev/canvas-react";
+import { Context, ManifestV2, enableContextDevTools } from "@uniformdev/context";
 import { IABTest, IBanner } from "@framework/types";
 import { OptimizelyExperiment, OptimizelyVariation } from "@optimizely/react-sdk";
-import { Personalize, UniformContext } from "@uniformdev/context-react";
+import React, { ComponentProps, ComponentType } from "react";
 import { fetchEntry, fetchEntryById } from "@framework/utils/contentstack";
 
 import BannerCard from "@components/common/banner-card";
 import { BannerSize } from "@framework/utils/mapper";
-import { CanvasClient } from "@uniformdev/canvas";
 import Container from "@components/ui/container";
-import { Context } from "@uniformdev/context";
 import { OptimizelyProvider } from "@optimizely/react-sdk";
-import React from "react";
 import Spinner from "./spinner";
+import { TestVariant } from "@uniformdev/optimize-tracker-common";
+import { UniformContext } from "@uniformdev/context-react";
 import axios from "axios";
 import manifest from "../../components/uniform/lib/contextManifest.json";
 import { useRouter } from "next/router";
 
 const context = new Context({
-  manifest,
+  manifest: manifest as ManifestV2,
+  plugins: [enableContextDevTools()],
   defaultConsent: true,
 });
 
@@ -35,6 +38,32 @@ export type ABProvider = "optimizely" | "DY" | "uniform";
 interface AbTestingProps {
   provider: ABProvider;
   experiment: IABTest;
+}
+
+export function resolveRenderer(component: any) {
+  const [banner, setBanner] = React.useState<IBanner>();
+
+  React.useEffect(() => {
+    if (component && component.type === "contentstackAbTestingBanner") {
+      console.log("COMPONENT", component);
+      const uid = component.parameters.contentstackVariants.value.entries[0].entryUid;
+      fetchEntryById<IBanner>("en-US", "banner_variation", uid)
+        .then((b) => {
+          setBanner(b);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [component]);
+  return banner
+    ? () => (
+        <BannerCard
+          key={`banner--key${banner.id}`}
+          banner={banner}
+          href={`${banner.slug}`}
+          className="mb-12 lg:mb-14 xl:mb-16 pb-0.5 lg:pb-1 xl:pb-0"
+        />
+      )
+    : () => <></>;
 }
 
 export default function AbTesting({ experiment, provider }: AbTestingProps) {
@@ -108,6 +137,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
               composition.slots.abTesting[0].slots.test.length > 0
             ) {
               setComposition(composition);
+              console.log("COMPOSITION", composition);
               const ids = composition.slots.abTesting[0].slots.test.map(
                 (t: any) => t.parameters.contentstackVariants.value.entries[0].entryUid
               );
@@ -219,14 +249,9 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
       return composition ? (
         <UniformContext context={context}>
           <Container>
-            {variation && (
-              <BannerCard
-                key={`banner--key${variation.id}`}
-                banner={variation}
-                href={`${variation.slug}`}
-                className="mb-12 lg:mb-14 xl:mb-16 pb-0.5 lg:pb-1 xl:pb-0"
-              />
-            )}
+            <Composition data={composition} resolveRenderer={resolveRenderer}>
+              <Slot name="abTesting" />
+            </Composition>
           </Container>
         </UniformContext>
       ) : fetching ? (

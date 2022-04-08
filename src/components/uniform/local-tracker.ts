@@ -4,8 +4,9 @@ import { createDefaultTracker } from "@uniformdev/optimize-tracker-browser";
 import intentManifest from "./lib/intentManifest.json";
 
 const localTracker: Tracker = createDefaultTracker({
-  intentManifest: intentManifest as unknown as DeliveryAPIResult,
-  logLevelThreshold: "error",
+  intentManifest: intentManifest as DeliveryAPIResult,
+
+  logLevelThreshold: "verbose",
 });
 
 export default localTracker;

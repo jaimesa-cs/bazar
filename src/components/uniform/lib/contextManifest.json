@@ -1,6 +1,8 @@
 {
   "project": {
     "pz": {},
-    "test": {}
+    "test": {
+      "AB Test General Discounts": {}
+    }
   }
 }
