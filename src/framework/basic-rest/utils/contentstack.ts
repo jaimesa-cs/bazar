@@ -212,6 +212,43 @@ export const fetchEntry = <T extends Composition>(
   });
 };
 
+export const fetchEntryById = async <T extends Composition>(
+  locale: string | undefined = "en-us",
+  type: string,
+  uid: string,
+  includes?: string[],
+  jsonRteFields?: string[]
+): Promise<T | undefined> => {
+  return new Promise<T | undefined>((resolve, reject) => {
+    stack
+      .ContentType(type)
+      .Entry(uid)
+      .includeOwner()
+      .includeReference(includes || [])
+      .toJSON()
+      .language(locale.toLowerCase() || "en-us")
+      .includeFallback()
+      .fetch()
+      .then((result) => {
+        // console.log("fetchComposition", result[0][0]);
+        if (jsonRteFields) {
+          Utils.jsonToHTML({
+            entry: result,
+            paths: jsonRteFields,
+            renderOption,
+          });
+          // console.log("fetchComposition :: jsonRteFields", result[0][0]);
+        }
+        // console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
+        resolve(mapper().toComposition<T>(result, type));
+      })
+      .catch((error) => {
+        console.log("Error", error);
+        reject(error);
+      });
+  });
+};
+
 export const getCompositionPaths = (locale: string | undefined = "en-us", type: string): Promise<any> => {
   // console.log("SDK");
   return new Promise<any>((resolve) => {
