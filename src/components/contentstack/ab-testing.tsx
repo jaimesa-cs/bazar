@@ -43,7 +43,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
   const [variation, setVariation] = React.useState<IBanner>();
   const [campaign, setCampaign] = React.useState<string>();
   const [variant, setVariant] = React.useState<string>();
-  const [variations, setVariations] = React.useState<IBanner[]>();
+
   const [composition, setComposition] = React.useState<any>();
   const [fetching, setFetching] = React.useState<boolean>(true);
   const [uids, setUids] = React.useState<string[]>([]);
@@ -130,10 +130,11 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
 
   React.useEffect(() => {
     if (uids && uids.length > 0) {
-      Promise.all(uids.map((uid: string) => fetchEntryById<IBanner>(locale, "banner_variation", uid)))
-        .then((entries) => {
-          console.log(entries);
-          setVariations(entries as IBanner[]);
+      const rand = Math.floor(Math.random() * uids.length);
+
+      fetchEntryById<IBanner>(locale, "banner_variation", uids[rand])
+        .then((e) => {
+          setVariation(e);
         })
         .catch((err) => console.log(err));
     }
@@ -218,25 +219,13 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
       return composition ? (
         <UniformContext context={context}>
           <Container>
-            {/* {variations && <Test name="test" variations={variations} component={RenderUniformBanner} random={100} />} */}
-            {variations && (
-              <>
-                {Math.floor(Math.random() * 2) === 0 ? (
-                  <BannerCard
-                    key={`banner--key${variations[0].id}`}
-                    banner={variations[0]}
-                    href={`${variations[0].slug}`}
-                    className="mb-12 lg:mb-14 xl:mb-16 pb-0.5 lg:pb-1 xl:pb-0"
-                  />
-                ) : (
-                  <BannerCard
-                    key={`banner--key${variations[1].id}`}
-                    banner={variations[1]}
-                    href={`${variations[1].slug}`}
-                    className="mb-12 lg:mb-14 xl:mb-16 pb-0.5 lg:pb-1 xl:pb-0"
-                  />
-                )}
-              </>
+            {variation && (
+              <BannerCard
+                key={`banner--key${variation.id}`}
+                banner={variation}
+                href={`${variation.slug}`}
+                className="mb-12 lg:mb-14 xl:mb-16 pb-0.5 lg:pb-1 xl:pb-0"
+              />
             )}
           </Container>
         </UniformContext>
