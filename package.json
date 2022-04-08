@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf \"{.next,dist,build,out,node_modules}\"",
     "dev": "next dev",
-    "build": "yarn run download:manifest && next build next build",
+    "build": "next build",
     "start": "next start",
     "download:context:manifest": "uniform context manifest download  --project 7c270e39-831e-4bce-9490-7aa627ec34e1 --apiKey uf1lu7nukfx5p0jj2darjwzsz0ztwh84znyxdnusu6wpm5vq3tusmm4yv8qyzvvvmavyzmvuyc37xqgq744m95nee6kkvxajz --output ./src/components/uniform/lib/contextManifest.json",
     "download:intent:manifest": "uniform optimize manifest download  --project 7c270e39-831e-4bce-9490-7aa627ec34e1 --apiKey uf1lu7nukfx5p0jj2darjwzsz0ztwh84znyxdnusu6wpm5vq3tusmm4yv8qyzvvvmavyzmvuyc37xqgq744m95nee6kkvxajz --output ./src/components/uniform/lib/intentManifest.json"
