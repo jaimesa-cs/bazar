@@ -1,55 +1,20 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import { IStaticComposition, staticPageIncludes, staticPageJsonRteFields } from "@framework/types";
 import { fetchEntry, getCompositionPaths } from "@framework/utils/contentstack";
 
-import Container from "@components/ui/container";
-import { Element } from "react-scroll";
-import ErrorBoundary from "@components/error-boundary/error-boundary";
-import ErrorInformation from "@components/404/error-information";
 import Layout from "@components/layout/layout";
-import PageHeader from "@components/ui/page-header";
-import RenderModularBlocks from "@components/contentstack/render-modular-blocks";
-import { StaticComposition } from "@framework/types";
+import StaticContentPage from "@components/content/static-page";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-const staticPageIncludes: string[] = ["header.banner", "dynamic_blocks.mail_list_subscription.email_subscription"];
-const jsonRteFields: string[] = ["dynamic_blocks.paragraphs_with_links.paragraphs.paragraph"];
-
 interface StaticPageProps {
-  page: StaticComposition;
+  page: IStaticComposition;
   path?: string;
 }
-export default function CatchAll({ path, page }: StaticPageProps) {
-  console.log("STATIC_PAGE", page);
-  return page ? (
-    <>
-      {page.header && (
-        <ErrorBoundary identifier="page-header">
-          <PageHeader
-            pageHeader={page.header.title}
-            pageSubHeader={page.header.subtitle}
-            imageUrl={page.header.banner.image.desktop.url}
-          />
-        </ErrorBoundary>
-      )}
-      {page.blocks && (
-        <ErrorBoundary identifier="modular-blocks">
-          <RenderModularBlocks blocks={page.blocks} />
-        </ErrorBoundary>
-      )}
-    </>
-  ) : (
-    <Container>
-      <ErrorInformation error={null} />
-      <Container>
-        <Element key="0" id="path" className="mb-10" name="path">
-          <h2 className="text-lg md:text-xl lg:text-2xl text-heading font-bold mb-4">{path}</h2>
-        </Element>
-      </Container>
-    </Container>
-  );
+export default function StaticPage({ path, page }: StaticPageProps) {
+  return <StaticContentPage data={page} path={path} />;
 }
 
-CatchAll.Layout = Layout;
+StaticPage.Layout = Layout;
 
 export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultLocale, ...props }) => {
   // console.log("PROPS", props);
@@ -64,17 +29,17 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
     path = path.replace(`/${locale}`, "");
   }
 
-  return fetchEntry<StaticComposition>(
-    locale,
-    "static_composition",
-    [{ key: "url", value: path }],
-    staticPageIncludes,
-    jsonRteFields
-  )
+  return fetchEntry<IStaticComposition>({
+    locale: locale || "en-us",
+    type: "static_composition",
+    queryParams: [{ key: "url", value: path }],
+    includes: staticPageIncludes,
+    jsonRteFields: staticPageJsonRteFields,
+  })
     .then((page) => {
       return {
         props: {
-          page: page as StaticComposition,
+          page: page as IStaticComposition,
           ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
         },
         revalidate: 10, // In seconds,

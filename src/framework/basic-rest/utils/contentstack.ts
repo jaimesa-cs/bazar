@@ -1,8 +1,9 @@
 import * as Utils from "@contentstack/utils";
 import * as contentstack from "contentstack";
 
-import { Composition, KeyValuePair } from "@framework/types";
+import { IComposition, KeyValuePair } from "@framework/types";
 
+import { LivePreviewQuery } from "contentstack";
 import { mapper } from "./mapper";
 
 const getRegion = (region: string | undefined): contentstack.Region => {
@@ -37,6 +38,15 @@ export interface IQuery {
   referenceFieldPath?: string[];
   jsonRtePath?: string[];
   entryUrl?: string;
+}
+
+export interface IQueryParameters {
+  locale: string;
+  type: string;
+  queryParams: KeyValuePair[];
+  previewQuery?: LivePreviewQuery;
+  includes?: string[];
+  jsonRteFields?: string[];
 }
 
 /**
@@ -169,41 +179,39 @@ export const getEntriesByUrl = <T extends any>({
 //Bazar Specific Code
 
 //TODO: Refactor this method to move url as another query parameter, and remove url from the signature
-export const fetchEntry = <T extends Composition>(
-  locale: string | undefined = "en-us",
-  type: string,
-  queryParams: KeyValuePair[],
-  includes?: string[],
-  jsonRteFields?: string[]
-): Promise<T | undefined> => {
+export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Promise<T | undefined> => {
   return new Promise<T | undefined>((resolve, reject) => {
-    let query = stack.ContentType(type).Query();
-    if (includes) {
-      query.includeReference(includes);
+    if (params.previewQuery) {
+      console.log("Fetching entry from preview query");
+      stack.livePreviewQuery(params.previewQuery);
+    }
+    let query = stack.ContentType(params.type).Query();
+    if (params.includes) {
+      query.includeReference(params.includes);
     }
     query.includeOwner().toJSON();
-    query.language(locale.toLowerCase() || "en-us");
+    query.language(params.locale.toLowerCase() || "en-us");
     query.includeFallback();
 
-    for (let i = 0; i < queryParams.length; i++) {
+    for (let i = 0; i < params.queryParams.length; i++) {
       // console.log("QUERY PARAMS", queryParams[i]);
-      query.where(queryParams[i].key, queryParams[i].value);
+      query.where(params.queryParams[i].key, params.queryParams[i].value);
     }
 
     query
       .find()
       .then((result) => {
         // console.log("fetchComposition", result[0][0]);
-        if (jsonRteFields) {
+        if (params.jsonRteFields) {
           Utils.jsonToHTML({
             entry: result,
-            paths: jsonRteFields,
+            paths: params.jsonRteFields,
             renderOption,
           });
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
         // console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
-        resolve(mapper().toComposition<T>(result[0][0], type));
+        resolve(mapper().toComposition<T>(result[0][0], params.type));
       })
       .catch((error) => {
         console.log("Error", error);
@@ -212,7 +220,7 @@ export const fetchEntry = <T extends Composition>(
   });
 };
 
-export const fetchEntryById = async <T extends Composition>(
+export const fetchEntryById = async <T extends IComposition>(
   locale: string | undefined = "en-us",
   type: string,
   uid: string,

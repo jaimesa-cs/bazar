@@ -1,4 +1,4 @@
-import { Composition, Home, IBanner, KeyValuePair, Navigation } from "@framework/types";
+import { IBanner, IComposition, IHome, KeyValuePair, Navigation } from "@framework/types";
 
 import { fetchEntry } from "@framework/utils/contentstack";
 import http from "@framework/utils/http";
@@ -6,7 +6,7 @@ import { mapper } from "@framework/utils/mapper";
 import { useQuery } from "react-query";
 
 // Axios
-export const fetchCompositionRaw = async <T extends Composition>(
+export const fetchCompositionRaw = async <T extends IComposition>(
   _url: string,
   _locale: string,
   _query: KeyValuePair[],
@@ -28,7 +28,7 @@ export const fetchCompositionRaw = async <T extends Composition>(
   // console.log(data.entries[0]);
   return mapper().toComposition(data.entries[0], _type) as T;
 };
-export const useDefaultCompositionQuery = <T extends Composition>(
+export const useDefaultCompositionQuery = <T extends IComposition>(
   locale: string | undefined = "en-us",
   query: KeyValuePair[],
   includes?: string[],
@@ -36,13 +36,13 @@ export const useDefaultCompositionQuery = <T extends Composition>(
 ) => {
   //SDK
   return useQuery<T | undefined, Error>([query, includes, jsonRteFields], () =>
-    fetchEntry<T>(locale.toLowerCase(), "composition", query, includes, jsonRteFields)
+    fetchEntry<T>({ locale: locale.toLowerCase(), type: "composition", queryParams: query, includes, jsonRteFields })
   );
   //Raw
   // return useQuery<Composition, Error>([url, includes], () => fetchCompositionRaw(url, locale, "composition", includes));
 };
 
-export const useCompositionQuery = <T extends Composition>(
+export const useCompositionQuery = <T extends IComposition>(
   locale: string | undefined = "en-us",
   type: string,
   query: KeyValuePair[],
@@ -51,25 +51,26 @@ export const useCompositionQuery = <T extends Composition>(
 ) => {
   //SDK
   return useQuery<T | undefined, Error>([locale, includes, jsonRteFields], () =>
-    fetchEntry<T>(locale, type, query, includes, jsonRteFields)
+    fetchEntry<T>({ locale, type, queryParams: query, includes, jsonRteFields })
   );
   //Raw
   // return useQuery<Composition, Error>([url, includes], () => fetchCompositionRaw<T>(url, locale, type, includes));
 };
 
 export const useHomeQuery = (locale: string | undefined = "en-us") => {
-  return useQuery<Home | undefined, Error>(["/", locale], () =>
-    fetchEntry<Home>(locale, "composition", [{ key: "url", value: "/" }])
+  console.log("useHomeQuery", "/", locale);
+  return useQuery<IHome | undefined, Error>(["/", locale], () =>
+    fetchEntry<IHome>({ locale, type: "composition", queryParams: [{ key: "url", value: "/" }] })
   );
 };
 
 export const useNavigationQuery = (key: string = "/navigation", locale: string | undefined = "en-us") => {
   return useQuery<Navigation | undefined, Error>([key, locale], () =>
-    fetchEntry<Navigation>(
+    fetchEntry<Navigation>({
       locale,
-      "navigation",
-      [{ key: "url", value: "/navigation" }],
-      ["links.category", "links.category.categories", "links.category.categories.categories"]
-    )
+      type: "navigation",
+      queryParams: [{ key: "url", value: "/navigation" }],
+      includes: ["links.category", "links.category.categories", "links.category.categories.categories"],
+    })
   );
 };

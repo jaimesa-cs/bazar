@@ -1,13 +1,14 @@
 import {
   BaseNavigationItem,
-  Composition,
   FaqQuestion,
-  Home,
   IABTest,
   IBanner,
+  IComposition,
   IErrorPage,
   IFooter,
+  IHome,
   IPayment,
+  IStaticComposition,
   IWidget,
   IWidgetItem,
   Navigation,
@@ -16,7 +17,6 @@ import {
   NavigationItem,
   PageHeader,
   Paragraph,
-  StaticComposition,
 } from "@framework/types";
 import { IoLogoFacebook, IoLogoInstagram, IoLogoTwitter, IoLogoYoutube } from "react-icons/io5";
 
@@ -351,7 +351,7 @@ const getPageHeader = (input: any): PageHeader => {
   }
   return NEW_HEADER;
 };
-const getComposition = (input: any, type: string = "composition"): Composition | undefined => {
+const getComposition = (input: any, type: string = "composition"): IComposition | undefined => {
   // console.log("COMPOSITION", input);
   if (input === undefined) return input;
   try {
@@ -373,7 +373,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         return errorPage;
       case "static_composition":
         // console.log("STATIC COMPOSITION", input);
-        const page: StaticComposition = {
+        const page: IStaticComposition = {
           title: input.title,
           url: input.url,
           type: input.type,
@@ -429,7 +429,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
         return page;
       case "composition":
         // console.log("COMPOSITION (HOME)", input);
-        const home: Home = {
+        const home: IHome = {
           title: input.title,
           url: input.url,
           type: input.type,
@@ -463,7 +463,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
 
           home.abTesting = abTesting;
         }
-        console.log("HOME", home);
+        // console.log("HOME", home);
         return home;
 
       case "footer":
@@ -536,7 +536,7 @@ const getComposition = (input: any, type: string = "composition"): Composition |
 
 export const mapper = () => {
   return {
-    toComposition: <T extends Composition>(input: any, type?: string): T | undefined => {
+    toComposition: <T extends IComposition>(input: any, type?: string): T | undefined => {
       const c = getComposition(input, type);
       if (c !== undefined) {
         return c as T;

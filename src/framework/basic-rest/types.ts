@@ -1,6 +1,12 @@
 import { QueryKey } from "react-query";
 import { ReactNode } from "react";
 
+export const staticPageIncludes: string[] = [
+  "header.banner",
+  "dynamic_blocks.mail_list_subscription.email_subscription",
+];
+export const staticPageJsonRteFields: string[] = ["dynamic_blocks.paragraphs_with_links.paragraphs.paragraph"];
+
 export type CollectionsQueryOptionsType = {
   text?: string;
   collection?: string;
@@ -166,7 +172,7 @@ export interface LanguageItem {
   value: string;
   icon: JSX.Element;
 }
-export interface Navigation extends Composition {
+export interface Navigation extends IComposition {
   menu: NavigationItem[];
 }
 export interface FaqQuestion {
@@ -205,12 +211,12 @@ export interface IABTest {
   variant_b?: IBanner;
 }
 
-export interface StaticComposition extends Composition {
+export interface IStaticComposition extends IComposition {
   header: PageHeader;
   blocks: ModularBlock[];
 }
 
-export interface Home extends Composition {
+export interface IHome extends IComposition {
   banner?: IBanner[];
   slider?: IBanner[];
   personalization?: string[];
@@ -233,19 +239,19 @@ export interface IPayment {
   image: string;
 }
 
-export interface IFooter extends Composition {
+export interface IFooter extends IComposition {
   copyright: string;
   widgets: IWidget[];
   payment: IPayment[];
 }
 
-export interface Composition {
+export interface IComposition {
   title: string;
   url: string;
   type: string;
 }
 
-export interface IErrorPage extends Composition {
+export interface IErrorPage extends IComposition {
   error: string;
   errorNumber: string;
 }
@@ -267,7 +273,7 @@ export type BannerImages = {
 //   image: BannerImages;
 //   type: "small" | "medium" | "large";
 // };
-export interface IBanner extends Composition {
+export interface IBanner extends IComposition {
   id: number;
   title: string;
   slug: string;
