@@ -190,7 +190,7 @@ export const getEntriesByUrl = <T extends any>({
 export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Promise<T | undefined> => {
   return new Promise<T | undefined>((resolve, reject) => {
     if (params.previewQuery) {
-      console.log("Fetching entry from preview query");
+      // console.log("Fetching entry from preview query");
       stack.livePreviewQuery(params.previewQuery);
     } else {
       stack.livePreviewQuery({} as LivePreviewQuery);
@@ -204,10 +204,10 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
     query.includeFallback();
 
     for (let i = 0; i < params.queryParams.length; i++) {
-      console.log("QUERY PARAMS", params.queryParams[i]);
+      // console.log("QUERY PARAMS", params.queryParams[i]);
       query.where(params.queryParams[i].key, params.queryParams[i].value);
     }
-    console.log("QUERY", query);
+    // console.log("QUERY", query);
     query
       .find()
       .then((result) => {

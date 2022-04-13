@@ -10,7 +10,6 @@ import Container from "@components/ui/container";
 import Divider from "@components/ui/divider";
 import DownloadApps from "@components/common/download-apps";
 import ExclusiveBlock from "@containers/exclusive-block";
-import HandleLoadingOrError from "@components/contentstack/handle-loading-and-error";
 import { IHome } from "@framework/types";
 import { Instagram } from "react-content-loader";
 import NewArrivalsProductFeed from "@components/product/feeds/new-arrivals-product-feed";
