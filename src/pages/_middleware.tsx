@@ -1,6 +1,11 @@
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
+  // if (req.nextUrl.pathname.startsWith("/v3")) {
+  //   console.log("LIVE: V3", `https://api.contentstack.io${req.nextUrl.href}`);
+  //   console.log(req.headers);
+  //   return NextResponse.rewrite(`https://api.contentstack.io${req.nextUrl.href}`);
+  // }
   if (
     !req.nextUrl.pathname.startsWith("/live-preview") &&
     req.nextUrl.searchParams.has("live_preview") &&

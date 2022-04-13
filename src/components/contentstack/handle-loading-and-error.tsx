@@ -8,13 +8,5 @@ interface DefaultErrorProps {
   children: ReactNode;
 }
 export default function HandleLoadingOrError({ children, isLoading, error }: DefaultErrorProps) {
-  return isLoading ? (
-    <>
-      <Spinner />
-    </>
-  ) : error ? (
-    <DefaultError error={error} />
-  ) : (
-    <>{children}</>
-  );
+  return error ? <DefaultError error={error} /> : isLoading ? <Spinner /> : <>{children}</>;
 }

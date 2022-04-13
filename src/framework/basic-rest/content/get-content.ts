@@ -1,4 +1,4 @@
-import { IBanner, IComposition, IHome, KeyValuePair, Navigation } from "@framework/types";
+import { IBanner, IComposition, IHome, KeyValuePair, Navigation, navigationIncludes } from "@framework/types";
 
 import { fetchEntry } from "@framework/utils/contentstack";
 import http from "@framework/utils/http";
@@ -64,13 +64,13 @@ export const useHomeQuery = (locale: string | undefined = "en-us") => {
   );
 };
 
-export const useNavigationQuery = (key: string = "/navigation", locale: string | undefined = "en-us") => {
-  return useQuery<Navigation | undefined, Error>([key, locale], () =>
+export const useNavigationQuery = (locale: string | undefined = "en-us") => {
+  return useQuery<Navigation | undefined, Error>(["/navigation", locale], () =>
     fetchEntry<Navigation>({
       locale,
       type: "navigation",
       queryParams: [{ key: "url", value: "/navigation" }],
-      includes: ["links.category", "links.category.categories", "links.category.categories.categories"],
+      includes: navigationIncludes,
     })
   );
 };

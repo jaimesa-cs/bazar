@@ -5,6 +5,7 @@ import { IComposition, KeyValuePair } from "@framework/types";
 
 import ContentstackLivePreview from "@contentstack/live-preview-utils";
 import { LivePreviewQuery } from "contentstack";
+import { addEditableTags } from "@contentstack/utils";
 import { mapper } from "./mapper";
 
 const getRegion = (region: string | undefined): contentstack.Region => {
@@ -30,10 +31,29 @@ const stack = contentstack.Stack({
 });
 
 stack.setHost("api.contentstack.io");
+// stack.setProtocol("http");
+// stack.setHost("localhost");
+// stack.setPort(3000);
 
 ContentstackLivePreview.init({
   enable: true,
 });
+
+// ContentstackLivePreview.init({
+//   //@ts-ignore
+//   stackSdk: stack,
+//   debug: true,
+//   clientUrlParams: {
+//     host: `api.contentstack.io`,
+//   },
+//   stackDetails: {
+//     apiKey: process.env.NEXT_PUBLIC_CS_API_KEY || "",
+//     environment: process.env.NEXT_PUBLIC_CS_ENVIRONMENT || "",
+//   },
+//   ssr: false,
+// });
+
+export const { onEntryChange } = ContentstackLivePreview;
 
 export const renderOption: Utils.RenderOption = {
   span: (node: Utils.Node, next: Utils.Next) => {
@@ -203,6 +223,12 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
     query.language(params.locale.toLowerCase() || "en-us");
     query.includeFallback();
 
+    // const url = params?.queryParams?.find((param) => param.key === "url")?.value;
+    // if (url) {
+    //   console.log("Fetching entry from url", url);
+    //   console.log("QUERY", query);
+    // }
+
     for (let i = 0; i < params.queryParams.length; i++) {
       // console.log("QUERY PARAMS", params.queryParams[i]);
       query.where(params.queryParams[i].key, params.queryParams[i].value);
@@ -221,6 +247,10 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
         // console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
+        if (params.previewQuery) {
+          addEditableTags(result[0][0], "static_composition", true);
+          console.log("DEBUG :: COMPOSITION :: EDITABLE TAGS", result[0][0]);
+        }
         resolve(mapper().toComposition<T>(result[0][0], params.type));
       })
       .catch((error) => {

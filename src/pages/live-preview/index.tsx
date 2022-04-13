@@ -7,7 +7,6 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 export default function Home(props: any) {
   return <HomeContentPage data={props.data} />;
 }
-
 Home.Layout = Layout;
 
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {

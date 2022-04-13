@@ -7,6 +7,7 @@ import { fetchEntry } from "@framework/utils/contentstack";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function StaticPage(props: any) {
+  console.log("PREVIEW: PAGE PROPS", props);
   return <StaticContentPage {...props} />;
 }
 

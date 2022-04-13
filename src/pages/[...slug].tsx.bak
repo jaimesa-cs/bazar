@@ -1,14 +1,39 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { IStaticComposition, staticPageIncludes, staticPageJsonRteFields } from "@framework/types";
-import { fetchEntry, getCompositionPaths } from "@framework/utils/contentstack";
+import { fetchEntry, getCompositionPaths, onEntryChange } from "@framework/utils/contentstack";
 
 import Layout from "@components/layout/layout";
+import React from "react";
 import StaticContentPage from "@components/content/static-page";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useRouter } from "next/router";
 
-export default function StaticPage(props: any) {
-  console.log("LIVE: PAGE PROPS", props);
-  return <StaticContentPage {...props} />;
+export default function StaticPage({ data: page, path }: any) {
+  const [data, setData] = React.useState<IStaticComposition | undefined>();
+  const { locale } = useRouter();
+
+  async function fetchData() {
+    try {
+      console.info("fetching live preview data...");
+      const d = await fetchEntry<IStaticComposition>({
+        locale: locale || "en-us",
+        type: "static_composition",
+        queryParams: [{ key: "url", value: path }],
+        includes: staticPageIncludes,
+        jsonRteFields: staticPageJsonRteFields,
+      });
+      console.log(d);
+      setData(d);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  React.useEffect(() => {
+    onEntryChange(fetchData);
+  }, []);
+
+  return <StaticContentPage data={data} path={path} />;
 }
 
 StaticPage.Layout = Layout;

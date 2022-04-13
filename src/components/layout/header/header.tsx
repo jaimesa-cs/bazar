@@ -9,6 +9,7 @@ import SearchIcon from "@components/icons/search-icon";
 import { addActiveScroll } from "@utils/add-active-scroll";
 import dynamic from "next/dynamic";
 import { useNavigationQuery } from "@framework/content/get-content";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { useUI } from "@contexts/ui.context";
 
@@ -19,7 +20,8 @@ const CartButton = dynamic(() => import("@components/cart/cart-button"), {
 
 type DivElementRef = React.MutableRefObject<HTMLDivElement>;
 const Header: React.FC = () => {
-  const { data: navigation, isLoading, error } = useNavigationQuery();
+  const { locale } = useRouter();
+  const { data: navigation, isLoading, error } = useNavigationQuery(locale);
   const { openSidebar, setDrawerView, openSearch, openModal, setModalView, isAuthorized } = useUI();
   const { t } = useTranslation("common");
 
@@ -52,7 +54,6 @@ const Header: React.FC = () => {
               </span>
             </button>
             <Logo />
-            {/* Jaime: <HeaderMenu data={site_header.menu} className="hidden lg:flex md:ms-6 xl:ms-10" /> */}
             {navigation && <HeaderMenu data={navigation.menu} className="hidden lg:flex md:ms-6 xl:ms-10" />}
 
             <div className="flex-shrink-0 ms-auto lg:me-5 xl:me-8 2xl:me-10">

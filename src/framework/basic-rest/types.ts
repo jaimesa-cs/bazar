@@ -7,6 +7,12 @@ export const staticPageIncludes: string[] = [
 ];
 export const staticPageJsonRteFields: string[] = ["dynamic_blocks.paragraphs_with_links.paragraphs.paragraph"];
 
+export const navigationIncludes = [
+  "links.category",
+  "links.category.categories",
+  "links.category.categories.categories",
+];
+
 export type CollectionsQueryOptionsType = {
   text?: string;
   collection?: string;
