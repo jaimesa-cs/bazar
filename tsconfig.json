@@ -34,7 +34,10 @@
     "additional.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/pages/live-preview/[...slug].tsx"
+    "src/pages/live-preview/[...slug].tsx",
+    "src/pages/[...slug].tsx.bak",
+    "src/pages/_middleware.ssr",
+    "src/pages/[...slug].ssr"
   ],
   "exclude": ["node_modules"]
 }
