@@ -98,9 +98,11 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
             .then((res) => {
               console.log(`Fetching Banner for campaign: ${campaign} and variant: ${res.data.variant}`);
               setVariant(res.data.variant);
-              fetchEntry<IBanner>(locale, "banner_variation", [
-                { key: "campaign", value: `${campaign}|${res.data.variant}` },
-              ])
+              fetchEntry<IBanner>({
+                locale: locale || "en-us",
+                type: "banner_variation",
+                queryParams: [{ key: "campaign", value: `${campaign}|${res.data.variant}` }],
+              })
                 .then((b) => {
                   setVariation(b);
                   setFetching(false);

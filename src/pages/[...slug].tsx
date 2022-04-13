@@ -6,12 +6,8 @@ import Layout from "@components/layout/layout";
 import StaticContentPage from "@components/content/static-page";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-interface StaticPageProps {
-  page: IStaticComposition;
-  path?: string;
-}
-export default function StaticPage({ path, page }: StaticPageProps) {
-  return <StaticContentPage data={page} path={path} />;
+export default function StaticPage(props: any) {
+  return <StaticContentPage {...props} />;
 }
 
 StaticPage.Layout = Layout;
@@ -28,7 +24,7 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
   if (locales?.some((l) => path.startsWith(`/${l}/`))) {
     path = path.replace(`/${locale}`, "");
   }
-
+  console.log("PATH", path);
   return fetchEntry<IStaticComposition>({
     locale: locale || "en-us",
     type: "static_composition",
@@ -37,9 +33,11 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
     jsonRteFields: staticPageJsonRteFields,
   })
     .then((page) => {
+      console.log("PAGE", page);
       return {
         props: {
-          page: page as IStaticComposition,
+          data: page,
+          path,
           ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
         },
         revalidate: 10, // In seconds,
@@ -49,7 +47,8 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
       console.log("ERROR [...slug]", err);
       return {
         props: {
-          page: null,
+          data: null,
+          path,
           ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
         },
       };

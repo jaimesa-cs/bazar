@@ -914,6 +914,15 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     to-fast-properties "^2.0.0"
 
+"@contentstack/live-preview-utils@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@contentstack/live-preview-utils/-/live-preview-utils-1.1.0.tgz#6ef252555bfbfc660238906a22862858e3305871"
+  integrity sha512-Yd/XV6heXRIbwlk63zDMTUTaZSrRH72oGTiLE1DE5/DHDeZb9y8HHRBNFqjaaq0fZRuHGgVy1176B4aGw5VK+Q==
+  dependencies:
+    just-camel-case "^4.0.2"
+    morphdom "^2.6.1"
+    uuid "^8.3.2"
+
 "@contentstack/utils@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@contentstack/utils/-/utils-1.1.1.tgz#52ca37a61cfe1e61e18084b0c7f086eda821d74f"
@@ -3383,6 +3392,11 @@ jsonpointer@^5.0.0:
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-5.0.0.tgz#f802669a524ec4805fa7389eadbc9921d5dc8072"
   integrity sha512-PNYZIdMjVIvVgDSYKTT63Y+KZ6IZvGRNNWcxwD+GNnUz1MKPfv30J8ueCjdwcN0nDx2SlshgyB7Oy0epAzVRRg==
 
+just-camel-case@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/just-camel-case/-/just-camel-case-4.0.2.tgz#dc1e9e19e4200bb91f482716726135c35e901ac3"
+  integrity sha512-df6QI/EIq+6uHe/wtaa9Qq7/pp4wr4pJC/r1+7XhVL6m5j03G6h9u9/rIZr8rDASX7CxwDPQnZjffCo2e6PRLw==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
@@ -3573,6 +3587,11 @@ modern-normalize@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/modern-normalize/-/modern-normalize-1.1.0.tgz#da8e80140d9221426bd4f725c6e11283d34f90b7"
   integrity sha512-2lMlY1Yc1+CUy0gw4H95uNN7vjbpoED7NNRSBHE25nWfLBdmMzFCsPshlzbxHz+gYMcBEUN8V4pU16prcdPSgA==
+
+morphdom@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/morphdom/-/morphdom-2.6.1.tgz#e868e24f989fa3183004b159aed643e628b4306e"
+  integrity sha512-Y8YRbAEP3eKykroIBWrjcfMw7mmwJfjhqdpSvoqinu8Y702nAwikpXcNFDiIkyvfCLxLM9Wu95RZqo4a9jFBaA==
 
 ms@2.0.0:
   version "2.0.0"
@@ -5213,7 +5232,7 @@ util@0.12.4, util@^0.12.0:
   resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.10.0.tgz#ea4148f9a741015f05ed74fd615e1d20e6bed82b"
   integrity sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==
 
-uuid@>=7.0.0:
+uuid@>=7.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==

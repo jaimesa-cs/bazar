@@ -15,16 +15,14 @@ StaticPage.Layout = Layout;
 export const getServerSideProps: GetServerSideProps = async ({ locale, query }) => {
   let { slug } = query;
   slug = `/${slug}`.split(",").join("/");
-  console.log("CONTEXT", slug);
-  //   console.log("LOCALE", locale);
   const page = await fetchEntry<IStaticComposition>({
     locale: locale || "en-us",
     type: "static_composition",
     queryParams: [{ key: "url", value: slug }],
+    previewQuery: { live_preview: query.live_preview as string, content_type_uid: query.content_type_uid as string },
     includes: staticPageIncludes,
     jsonRteFields: staticPageJsonRteFields,
   });
-  //   console.log("PAGE", page);
   const translations = await serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]);
   return {
     props: {

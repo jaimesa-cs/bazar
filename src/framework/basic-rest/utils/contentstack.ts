@@ -3,6 +3,7 @@ import * as contentstack from "contentstack";
 
 import { IComposition, KeyValuePair } from "@framework/types";
 
+import ContentstackLivePreview from "@contentstack/live-preview-utils";
 import { LivePreviewQuery } from "contentstack";
 import { mapper } from "./mapper";
 
@@ -21,11 +22,18 @@ const stack = contentstack.Stack({
   delivery_token: process.env.NEXT_PUBLIC_CS_DELIVERY_TOKEN || "",
   environment: process.env.NEXT_PUBLIC_CS_ENVIRONMENT || "",
   region: getRegion(process.env.NEXT_PUBLIC_CS_REGION),
+  live_preview: {
+    management_token: process.env.NEXT_PUBLIC_CS_MANAGEMENT_TOKEN || "",
+    enable: true,
+    host: "api.contentstack.io",
+  },
 });
 
-if (process.env.CS_CUSTOM_HOST) {
-  stack.setHost(process.env.CS_CUSTOM_HOST);
-}
+stack.setHost("api.contentstack.io");
+
+ContentstackLivePreview.init({
+  enable: true,
+});
 
 export const renderOption: Utils.RenderOption = {
   span: (node: Utils.Node, next: Utils.Next) => {
@@ -184,6 +192,8 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
     if (params.previewQuery) {
       console.log("Fetching entry from preview query");
       stack.livePreviewQuery(params.previewQuery);
+    } else {
+      stack.livePreviewQuery({} as LivePreviewQuery);
     }
     let query = stack.ContentType(params.type).Query();
     if (params.includes) {
@@ -194,10 +204,10 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
     query.includeFallback();
 
     for (let i = 0; i < params.queryParams.length; i++) {
-      // console.log("QUERY PARAMS", queryParams[i]);
+      console.log("QUERY PARAMS", params.queryParams[i]);
       query.where(params.queryParams[i].key, params.queryParams[i].value);
     }
-
+    console.log("QUERY", query);
     query
       .find()
       .then((result) => {
