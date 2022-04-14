@@ -3,17 +3,18 @@ import { IStaticComposition, staticPageIncludes, staticPageJsonRteFields } from 
 import { fetchEntry, getCompositionPaths } from "@framework/utils/contentstack";
 
 import Layout from "@components/layout/layout";
+import { LivePreviewQuery } from "contentstack";
 import StaticContentPage from "@components/content/static-page";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export default function StaticPage(props: any) {
-  console.log("LIVE: PAGE PROPS", props);
+  // console.log("LIVE: PAGE PROPS", props);
   return <StaticContentPage {...props} />;
 }
 
 StaticPage.Layout = Layout;
 
-export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultLocale, ...props }) => {
+export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultLocale, previewData, ...props }) => {
   // console.log("PROPS", props);
   const arr = props?.params?.slug as [];
   let path = `/${arr.join("/")}`;
@@ -25,11 +26,13 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
   if (locales?.some((l) => path.startsWith(`/${l}/`))) {
     path = path.replace(`/${locale}`, "");
   }
-  // console.log("PATH", path);
+  // console.log("PREVIEW", previewData);
+
   return fetchEntry<IStaticComposition>({
     locale: locale || "en-us",
     type: "static_composition",
     queryParams: [{ key: "url", value: path }],
+    previewQuery: previewData as LivePreviewQuery,
     includes: staticPageIncludes,
     jsonRteFields: staticPageJsonRteFields,
   })
@@ -41,7 +44,7 @@ export const getStaticProps: GetStaticProps = async ({ locale, locales, defaultL
           path,
           ...serverSideTranslations(locale!, ["common", "forms", "menu", "faq", "footer"]),
         },
-        revalidate: 10, // In seconds,
+        // revalidate: 10, // In seconds,
       };
     })
     .catch((err) => {

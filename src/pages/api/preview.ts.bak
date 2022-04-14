@@ -1,0 +1,32 @@
+import { IStaticComposition, staticPageIncludes, staticPageJsonRteFields } from "@framework/types";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { LivePreviewQuery } from "contentstack";
+import { fetchEntry } from "@framework/utils/contentstack";
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.query.secret !== "12345" || !req.query.slug) {
+    return res.status(401).json({ message: "Invalid token and or slug" });
+  }
+  let previewQuery: LivePreviewQuery = {} as LivePreviewQuery;
+  console.log(req.query);
+  if (req.query.live_preview && req.query.content_type_uid) {
+    previewQuery = {
+      content_type_uid: req.query.content_type_uid as string,
+      live_preview: req.query.live_preview as string,
+    };
+  }
+  console.log("Fetching entry from slug", req.query.slug);
+  const page = await fetchEntry<IStaticComposition>({
+    locale: "en-us",
+    type: "static_composition",
+    queryParams: [{ key: "url", value: req.query.slug as string }],
+    previewQuery: previewQuery,
+    includes: staticPageIncludes,
+    jsonRteFields: staticPageJsonRteFields,
+  });
+
+  res.setPreviewData(previewQuery);
+  //   res.redirect(req.query.slug as string);
+  res.redirect(page?.url as string);
+};

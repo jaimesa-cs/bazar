@@ -1,7 +1,13 @@
 import * as Utils from "@contentstack/utils";
 import * as contentstack from "contentstack";
 
-import { IComposition, KeyValuePair } from "@framework/types";
+import {
+  IComposition,
+  IStaticComposition,
+  KeyValuePair,
+  staticPageIncludes,
+  staticPageJsonRteFields,
+} from "@framework/types";
 
 import ContentstackLivePreview from "@contentstack/live-preview-utils";
 import { LivePreviewQuery } from "contentstack";
@@ -207,6 +213,22 @@ export const getEntriesByUrl = <T extends any>({
 //Bazar Specific Code
 
 //TODO: Refactor this method to move url as another query parameter, and remove url from the signature
+export const fetchStaticPage = (
+  locale: string,
+  url: string,
+  previewQuery?: LivePreviewQuery
+): Promise<IStaticComposition | undefined> => {
+  const query: IQueryParameters = {
+    locale,
+    type: "static_composition",
+    queryParams: [{ key: "url", value: url }],
+    previewQuery: previewQuery,
+    includes: staticPageIncludes,
+    jsonRteFields: staticPageJsonRteFields,
+  };
+
+  return fetchEntry<IStaticComposition>(query);
+};
 export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Promise<T | undefined> => {
   return new Promise<T | undefined>((resolve, reject) => {
     if (params.previewQuery) {
@@ -247,11 +269,13 @@ export const fetchEntry = <T extends IComposition>(params: IQueryParameters): Pr
           // console.log("fetchComposition :: jsonRteFields", result[0][0]);
         }
         // console.log("DEBUG :: COMPOSITION :: ", result[0][0]);
-        if (params.previewQuery) {
-          addEditableTags(result[0][0], "static_composition", true);
-          console.log("DEBUG :: COMPOSITION :: EDITABLE TAGS", result[0][0]);
-        }
-        resolve(mapper().toComposition<T>(result[0][0], params.type));
+        // if (params.previewQuery) {
+        // addEditableTags(result[0][0], "static_composition", true);
+        // console.log("DEBUG :: COMPOSITION :: EDITABLE TAGS", result[0][0]);
+        // }
+        const composition = mapper().toComposition<T>(result[0][0], params.type);
+        // console.log("fetchComposition :: composition", composition);
+        resolve(composition);
       })
       .catch((error) => {
         console.log("Error", error);

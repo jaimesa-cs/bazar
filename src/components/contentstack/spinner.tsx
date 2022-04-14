@@ -5,10 +5,10 @@ export default function Spinner({ ...props }: LoadingSpinProps) {
     <div style={{ padding: 10 }}>
       <LoadingSpin
         animationDuration={props.animationDuration ?? "2s"}
-        width={props.width ?? "15px"}
+        width={props.width ?? "10px"}
         animationTimingFunction={props.animationTimingFunction ?? "ease-in-out"}
         animationDirection={props.animationDirection ?? "alternate"}
-        size={props.size ?? "20px"}
+        size={props.size ?? "10px"}
         primaryColor={props.primaryColor ?? "yellow"}
         secondaryColor={props.secondaryColor ?? "#333"}
         numberOfRotationsInAnimation={props.numberOfRotationsInAnimation ?? 2}

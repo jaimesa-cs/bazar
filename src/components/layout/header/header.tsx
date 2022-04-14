@@ -8,8 +8,7 @@ import { ROUTES } from "@utils/routes";
 import SearchIcon from "@components/icons/search-icon";
 import { addActiveScroll } from "@utils/add-active-scroll";
 import dynamic from "next/dynamic";
-import { useNavigationQuery } from "@framework/content/get-content";
-import { useRouter } from "next/router";
+import { useCommonItems } from "../layout";
 import { useTranslation } from "next-i18next";
 import { useUI } from "@contexts/ui.context";
 
@@ -19,9 +18,9 @@ const CartButton = dynamic(() => import("@components/cart/cart-button"), {
 });
 
 type DivElementRef = React.MutableRefObject<HTMLDivElement>;
-const Header: React.FC = () => {
-  const { locale } = useRouter();
-  const { data: navigation, isLoading, error } = useNavigationQuery(locale);
+
+const Header = () => {
+  const { navigation, isLoading, error } = useCommonItems();
   const { openSidebar, setDrawerView, openSearch, openModal, setModalView, isAuthorized } = useUI();
   const { t } = useTranslation("common");
 

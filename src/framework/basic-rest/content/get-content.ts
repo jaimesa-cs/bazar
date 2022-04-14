@@ -1,9 +1,10 @@
-import { IBanner, IComposition, IHome, KeyValuePair, Navigation, navigationIncludes } from "@framework/types";
+import { IComposition, IHome, KeyValuePair, Navigation, navigationIncludes } from "@framework/types";
 
 import { fetchEntry } from "@framework/utils/contentstack";
 import http from "@framework/utils/http";
 import { mapper } from "@framework/utils/mapper";
 import { useQuery } from "react-query";
+import useSWR from "swr";
 
 // Axios
 export const fetchCompositionRaw = async <T extends IComposition>(
@@ -64,8 +65,10 @@ export const useHomeQuery = (locale: string | undefined = "en-us") => {
   );
 };
 
-export const useNavigationQuery = (locale: string | undefined = "en-us") => {
-  return useQuery<Navigation | undefined, Error>(["/navigation", locale], () =>
+export const useNavigationQuery = (locale: string = "en-us") => {
+  const key = ["/navigation", locale];
+
+  const { data, error } = useSWR<Navigation | undefined, Error>(key, () =>
     fetchEntry<Navigation>({
       locale,
       type: "navigation",
@@ -73,4 +76,24 @@ export const useNavigationQuery = (locale: string | undefined = "en-us") => {
       includes: navigationIncludes,
     })
   );
+  return {
+    data: data || ({} as Navigation),
+    isLoading: !error && !data,
+    isError: error,
+    error: error || null,
+  };
+  // console.log(key);
+  // return useQuery<Navigation | undefined, Error>(
+  //   key,
+  //   () =>
+  //     fetchEntry<Navigation>({
+  //       locale,
+  //       type: "navigation",
+  //       queryParams: [{ key: "url", value: "/navigation" }],
+  //       includes: navigationIncludes,
+  //     }),
+  //   {
+  //     suspense: true,
+  //   }
+  // );
 };
