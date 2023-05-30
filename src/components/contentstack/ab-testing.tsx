@@ -34,7 +34,7 @@ export const ABTestBannerSize: BannerSize = {
   type: "large",
 };
 
-export type ABProvider = "optimizely" | "DY" | "uniform";
+export type ABProvider = "optimizely" | "dy" | "uniform";
 interface AbTestingProps {
   provider: ABProvider;
   experiment: IABTest;
@@ -88,7 +88,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
           })
         );
         break;
-      case "DY":
+      case "dy":
         if (experiment && experiment.campaign) {
           const campaign = experiment.campaign;
           setCampaign(campaign);
@@ -104,6 +104,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
                 queryParams: [{ key: "campaign", value: `${campaign}|${res.data.variant}` }],
               })
                 .then((b) => {
+                  // console.log(">>>", b);
                   setVariation(b);
                   setFetching(false);
                 })
@@ -117,6 +118,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
         }
         break;
       case "uniform":
+        console.log("UNIFORM", process.env.NEXT_PUBLIC_UNIFORM_API_KEY, process.env.NEXT_PUBLIC_UNIFORM_PROJECT_ID);
         const client = new CanvasClient({
           // if this weren't a tutorial, ↙ should be in an environment variable :)
           apiKey: process.env.NEXT_PUBLIC_UNIFORM_API_KEY,
@@ -229,7 +231,7 @@ export default function AbTesting({ experiment, provider }: AbTestingProps) {
           )}
         </>
       );
-    case "DY":
+    case "dy":
       return variation && variant && campaign ? (
         <BannerCard
           banner={variation}

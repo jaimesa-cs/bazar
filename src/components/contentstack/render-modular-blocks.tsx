@@ -3,7 +3,6 @@ import { EmailSubscription, Faq, ModularBlock, Paragraphs } from "@framework/typ
 
 import Accordion from "@components/common/accordion";
 import Container from "@components/ui/container";
-import { GetStaticPaths } from "next";
 import Subscription from "@components/common/subscription";
 
 function makeTitleToDOMId(title: string) {
